@@ -83,8 +83,15 @@ RESEND_API_KEY=your_resend_api_key
 
 经过一系列的优化和完善，邮箱验证系统能稳定运行，还具备了一定的用户体验和安全机制。这段构建过程让我对邮件服务和系统设计有了更深的理解。
 
+​
 ### 总结
-
 通过这次学习和实践，我不仅掌握了如何使用 Cloudflare 和 Resend 提供的服务，还学会了如何设计和优化一个邮箱验证系统。感谢 B站技术爬爬虾的视频，视频都非常有意思。
 
-如果你也对这个项目感兴趣，欢迎访问我的 [GitHub 仓库](https://github.com/TMDOG666/email-resend-demo) 查看完整代码，并期待你提出宝贵的意见和建议！
+如果你也对这个项目感兴趣，欢迎访问我的查看完整代码，并期待你提出宝贵的意见和建议！
+
+
+gitee：[码云仓库](https://gitee.com/mbjdot/email-resend-demo.git)
+
+github：  [GitHub 仓库](https://github.com/TMDOG666/email-resend-demo) 
+
+​

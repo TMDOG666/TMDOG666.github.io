@@ -42,7 +42,7 @@
 
 虽然ZooKeeper不再是Kafka的新欢，但它依然是聚会的重要嘉宾。在一些老聚会中，ZooKeeper负责协调和管理Kafka集群。新的聚会场地KRaft已经部分取代了它的角色，但它的功劳不可忽视。
 
-## KRaft（Kafka Raft）
+### KRaft（Kafka Raft）
 
 KRaft是Kafka的新舞台，它用来替代ZooKeeper，直接内置在Kafka中，让管理更加简洁高效。KRaft通过Raft共识算法实现了分布式系统中的领导选举和数据一致性，确保派对永不停歇。
 

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/174948015?v=4"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## Docker服务器上部署最新版Kafka
+### 博客地址：https://blog.tmdog114514.icu
+
+### 前提条件
+在开始之前，请确保你已经安装了以下环境：
+1. Docker
+
+### 创建目录
+首先，我们需要创建一个目录来存储Kafka的相关数据：
+```bash
+mkdir -p /data/deploy/kafkaCluster/kraft
+```
+
+### 创建docker-compose.yaml文件
+在你自己的目录下创建一个名为`docker-compose.yaml`的文件，并添加以下内容：
+我是在root目录下创建了kafka_config文件夹
+![image](https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7)
+
+在docker-compose.yaml下：
+
+```yaml
+version: '3'
+services:
+   kafka:
+     image: 'bitnami/kafka:latest'
+     user: root
+     environment:
+       - KAFKA_ENABLE_KRAFT=yes
+       - KAFKA_CFG_PROCESS_ROLES=broker,controller
+       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://ip:9092
+       - KAFKA_BROKER_ID=1
+       - KAFKA_CFG_NODE_ID=1
+       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
+       - ALLOW_PLAINTEXT_LISTENER=yes
+     volumes:
+       - /data/deploy/kafkaCluster/kraft:/bitnami/kafka:rw
+     ports:
+       - '9092:9092'
+       - '9093:9093'
+```
+
+### 配置解释
+- `version: '3'`：指定Docker Compose文件的版本。">
+<meta property="og:title" content="Docker服务器上部署最新版Kafka">
+<meta property="og:description" content="## Docker服务器上部署最新版Kafka
+### 博客地址：https://blog.tmdog114514.icu
+
+### 前提条件
+在开始之前，请确保你已经安装了以下环境：
+1. Docker
+
+### 创建目录
+首先，我们需要创建一个目录来存储Kafka的相关数据：
+```bash
+mkdir -p /data/deploy/kafkaCluster/kraft
+```
+
+### 创建docker-compose.yaml文件
+在你自己的目录下创建一个名为`docker-compose.yaml`的文件，并添加以下内容：
+我是在root目录下创建了kafka_config文件夹
+![image](https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7)
+
+在docker-compose.yaml下：
+
+```yaml
+version: '3'
+services:
+   kafka:
+     image: 'bitnami/kafka:latest'
+     user: root
+     environment:
+       - KAFKA_ENABLE_KRAFT=yes
+       - KAFKA_CFG_PROCESS_ROLES=broker,controller
+       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://ip:9092
+       - KAFKA_BROKER_ID=1
+       - KAFKA_CFG_NODE_ID=1
+       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
+       - ALLOW_PLAINTEXT_LISTENER=yes
+     volumes:
+       - /data/deploy/kafkaCluster/kraft:/bitnami/kafka:rw
+     ports:
+       - '9092:9092'
+       - '9093:9093'
+```
+
+### 配置解释
+- `version: '3'`：指定Docker Compose文件的版本。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://TMDOG666.github.io/post/Docker-fu-wu-qi-shang-bu-shu-zui-xin-ban-Kafka.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
+<title>Docker服务器上部署最新版Kafka</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Docker服务器上部署最新版Kafka</h1>
+<div class="title-right">
+    <a href="https://TMDOG666.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/TMDOG666/TMDOG666.github.io/issues/4" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>Docker服务器上部署最新版Kafka</h2>
+<h3>博客地址：<a href="https://blog.tmdog114514.icu" rel="nofollow">https://blog.tmdog114514.icu</a></h3>
+<h3>前提条件</h3>
+<p>在开始之前，请确保你已经安装了以下环境：</p>
+<ol>
+<li>Docker</li>
+</ol>
+<h3>创建目录</h3>
+<p>首先，我们需要创建一个目录来存储Kafka的相关数据：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p /data/deploy/kafkaCluster/kraft</pre></div>
+<h3>创建docker-compose.yaml文件</h3>
+<p>在你自己的目录下创建一个名为<code class="notranslate">docker-compose.yaml</code>的文件，并添加以下内容：<br>
+我是在root目录下创建了kafka_config文件夹<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7"><img src="https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7" alt="image" style="max-width: 100%;"></a></p>
+<p>在docker-compose.yaml下：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>
+<span class="pl-ent">services</span>:
+   <span class="pl-ent">kafka</span>:
+     <span class="pl-ent">image</span>: <span class="pl-s"><span class="pl-pds">'</span>bitnami/kafka:latest<span class="pl-pds">'</span></span>
+     <span class="pl-ent">user</span>: <span class="pl-s">root</span>
+     <span class="pl-ent">environment</span>:
+       - <span class="pl-s">KAFKA_ENABLE_KRAFT=yes</span>
+       - <span class="pl-s">KAFKA_CFG_PROCESS_ROLES=broker,controller</span>
+       - <span class="pl-s">KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER</span>
+       - <span class="pl-s">KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093</span>
+       - <span class="pl-s">KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT</span>
+       - <span class="pl-s">KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://ip:9092</span>
+       - <span class="pl-s">KAFKA_BROKER_ID=1</span>
+       - <span class="pl-s">KAFKA_CFG_NODE_ID=1</span>
+       - <span class="pl-s">KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093</span>
+       - <span class="pl-s">ALLOW_PLAINTEXT_LISTENER=yes</span>
+     <span class="pl-ent">volumes</span>:
+       - <span class="pl-s">/data/deploy/kafkaCluster/kraft:/bitnami/kafka:rw</span>
+     <span class="pl-ent">ports</span>:
+       - <span class="pl-s"><span class="pl-pds">"</span>9092:9092<span class="pl-pds">"</span></span>
+       - <span class="pl-s"><span class="pl-pds">"</span>9093:9093<span class="pl-pds">"</span></span></pre></div>
+<h3>配置解释</h3>
+<ul>
+<li><code class="notranslate">version: "3"</code>：指定Docker Compose文件的版本。</li>
+<li><code class="notranslate">services</code>：定义服务，本例中为Kafka服务。</li>
+<li><code class="notranslate">image: 'bitnami/kafka:latest'</code>：使用Bitnami提供的Kafka最新镜像。</li>
+<li><code class="notranslate">user: root</code>：以root用户运行容器。</li>
+<li><code class="notranslate">environment</code>：设置环境变量，配置Kafka。
+<ul>
+<li><code class="notranslate">KAFKA_ENABLE_KRAFT=yes</code>：启用KRaft模式。</li>
+<li><code class="notranslate">KAFKA_CFG_PROCESS_ROLES=broker,controller</code>：设置Kafka的角色为broker和controller。</li>
+<li><code class="notranslate">KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER</code>：定义controller的监听器名称。</li>
+<li><code class="notranslate">KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093</code>：定义Kafka的监听地址。</li>
+<li><code class="notranslate">KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT</code>：映射安全协议。</li>
+<li><code class="notranslate">KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://ip:9092</code>：设置广告监听地址，请将<code class="notranslate">ip</code>替换为服务器的实际IP地址。</li>
+<li><code class="notranslate">KAFKA_BROKER_ID=1</code>：设置Broker ID。</li>
+<li><code class="notranslate">KAFKA_CFG_NODE_ID=1</code>：设置节点ID。</li>
+<li><code class="notranslate">KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093</code>：设置控制器选举的投票者。</li>
+<li><code class="notranslate">ALLOW_PLAINTEXT_LISTENER=yes</code>：允许PLAINTEXT监听。</li>
+</ul>
+</li>
+<li><code class="notranslate">volumes</code>：挂载主机目录到容器内，持久化数据。
+<ul>
+<li><code class="notranslate">/data/deploy/kafkaCluster/kraft:/bitnami/kafka:rw</code>：将主机的<code class="notranslate">/data/deploy/kafkaCluster/kraft</code>目录挂载到容器的<code class="notranslate">/bitnami/kafka</code>目录。</li>
+</ul>
+</li>
+<li><code class="notranslate">ports</code>：暴露端口。
+<ul>
+<li><code class="notranslate">"9092:9092"</code>：将主机的9092端口映射到容器的9092端口。</li>
+<li><code class="notranslate">"9093:9093"</code>：将主机的9093端口映射到容器的9093端口。</li>
+</ul>
+</li>
+</ul>
+<p>可以通过添加下面的配置指定Kafka 控制器集群中的仲裁投票者（Quorum Voters）,目前配置是单机所以没有去配置</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-s">KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=brokerId@host:port,brokerId@host:port,...</span></pre></div>
+<h3>部署Kafka</h3>
+<p>在运行docker-compose的目录下，运行以下命令启动Kafka服务：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker-compose up -d</pre></div>
+<p>结果如下：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9bcd046f-f75c-4dce-bdee-029e13a39486"><img src="https://github.com/user-attachments/assets/9bcd046f-f75c-4dce-bdee-029e13a39486" alt="image" style="max-width: 100%;"></a></p>
+<h3>测试部署</h3>
+<p>确认Kafka服务是否已成功运行，可以使用以下命令检查容器状态：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker ps</pre></div>
+<p>结果如下：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0c6e6de2-df26-4aa2-908b-f65231be3a8b"><img src="https://github.com/user-attachments/assets/0c6e6de2-df26-4aa2-908b-f65231be3a8b" alt="image" style="max-width: 100%;"></a></p>
+<p>如果Kafka容器正在运行，你将看到<code class="notranslate">bitnami/kafka:latest</code>镜像的容器在列表中。</p>
+<p>你还可以使用Kafka命令行工具或Kafka客户端测试Kafka服务，例如使用Kafka自带的生产者和消费者工具发送和接收消息。</p>
+<hr>
+<p>这样，我们就完成了在基于Ubuntu的Docker服务器上部署最新版Kafka的操作。希望这篇博客对你有所帮助！</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://TMDOG666.github.io"> TMDOG 的博客 </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","TMDOG666/TMDOG666.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>

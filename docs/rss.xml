@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>TMDOG 的博客</title><link>https://TMDOG666.github.io</link><description>TMDOG 分享技术</description><copyright>TMDOG 的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/174948015?v=4</url><title>avatar</title><link>https://TMDOG666.github.io</link></image><lastBuildDate>Thu, 18 Jul 2024 03:56:39 +0000</lastBuildDate><managingEditor>TMDOG 的博客</managingEditor><ttl>60</ttl><webMaster>TMDOG 的博客</webMaster><item><title>Docker服务器上部署最新版Kafka</title><link>https://TMDOG666.github.io/post/Docker-fu-wu-qi-shang-bu-shu-zui-xin-ban-Kafka.html</link><description>## Docker服务器上部署最新版Kafka&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>TMDOG 的博客</title><link>https://TMDOG666.github.io</link><description>TMDOG 分享技术</description><copyright>TMDOG 的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/174948015?v=4</url><title>avatar</title><link>https://TMDOG666.github.io</link></image><lastBuildDate>Sun, 21 Jul 2024 14:18:05 +0000</lastBuildDate><managingEditor>TMDOG 的博客</managingEditor><ttl>60</ttl><webMaster>TMDOG 的博客</webMaster><item><title>Kafka的控制器和投票者：分布式聚会中的选举与仲裁</title><link>https://TMDOG666.github.io/post/Kafka-de-kong-zhi-qi-he-tou-piao-zhe-%EF%BC%9A-fen-bu-shi-ju-hui-zhong-de-xuan-ju-yu-zhong-cai.html</link><description># Kafka的控制器和投票者：分布式聚会中的选举与仲裁&#13;
+&#13;
+## 博客地址：[TMDOG的博客](https://blog.tmdog114514.icu/)&#13;
+&#13;
+## 引言&#13;
+&#13;
+在上一节聚会中，我们了解了Kafka的主要角色和基本概念。</description><guid isPermaLink="true">https://TMDOG666.github.io/post/Kafka-de-kong-zhi-qi-he-tou-piao-zhe-%EF%BC%9A-fen-bu-shi-ju-hui-zhong-de-xuan-ju-yu-zhong-cai.html</guid><pubDate>Sun, 21 Jul 2024 14:17:38 +0000</pubDate></item><item><title>Docker服务器上部署最新版Kafka</title><link>https://TMDOG666.github.io/post/Docker-fu-wu-qi-shang-bu-shu-zui-xin-ban-Kafka.html</link><description>## Docker服务器上部署最新版Kafka&#13;
 ### 博客地址：https://blog.tmdog114514.icu&#13;
 &#13;
 ### 前提条件&#13;

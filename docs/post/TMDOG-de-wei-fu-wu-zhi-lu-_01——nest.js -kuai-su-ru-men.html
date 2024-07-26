@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/174948015?v=4"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# TMDOG的微服务之路_01——nest.js 快速入门
+
+## **博客地址：[TMDOG 的博客](https://blog.tmdog114514.icu)**
+
+
+今天我们开始入门nest.js，学习nest.js项目快速的搭建。">
+<meta property="og:title" content="TMDOG的微服务之路_01——nest.js 快速入门">
+<meta property="og:description" content="# TMDOG的微服务之路_01——nest.js 快速入门
+
+## **博客地址：[TMDOG 的博客](https://blog.tmdog114514.icu)**
+
+
+今天我们开始入门nest.js，学习nest.js项目快速的搭建。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://TMDOG666.github.io/post/TMDOG-de-wei-fu-wu-zhi-lu-_01%E2%80%94%E2%80%94nest.js%20-kuai-su-ru-men.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
+<title>TMDOG的微服务之路_01——nest.js 快速入门</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">TMDOG的微服务之路_01——nest.js 快速入门</h1>
+<div class="title-right">
+    <a href="https://TMDOG666.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/TMDOG666/TMDOG666.github.io/issues/6" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>TMDOG的微服务之路_01——nest.js 快速入门</h1>
+<h2><strong>博客地址：<a href="https://blog.tmdog114514.icu" rel="nofollow">TMDOG 的博客</a></strong></h2>
+<p>今天我们开始入门nest.js，学习nest.js项目快速的搭建。</p>
+<h2>关于NestJS</h2>
+<p>NestJS 是一个用于构建高效、可靠且可扩展的服务器端应用程序的框架。它使用 TypeScript 编写，借鉴了许多成熟的解决方案，例如 Angular 的<strong>模块化</strong>和<strong>依赖注入</strong>系统，提供了一种现代化的开发体验。</p>
+<h3>主要特点</h3>
+<ol>
+<li><strong>模块化架构</strong>: 允许开发者将应用程序拆分为功能模块，便于维护和扩展。</li>
+<li><strong>依赖注入</strong>: 提供了强大的依赖注入机制，简化了服务之间的依赖管理。</li>
+<li><strong>装饰器</strong>: 通过 TypeScript 装饰器（decorators）来定义路由、管道、中间件等，提高代码的可读性和可维护性。</li>
+<li><strong>与现有技术集成</strong>: 支持与 Express 或 Fastify 进行无缝集成，并提供对多种数据库（如 TypeORM、Sequelize）的内置支持。</li>
+<li><strong>开箱即用的测试功能</strong>: 提供了便捷的工具来编写和运行单元测试和端到端测试。</li>
+<li><strong>易于使用的 CLI</strong>: Nest CLI 工具可以帮助开发者快速生成和管理项目结构和代码片段。</li>
+</ol>
+<h1>开箱即用的 Nest.js</h1>
+<h3>1. 创建项目目录</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5e625b22-7b82-47b8-8aba-7c6750d70347"><img src="https://github.com/user-attachments/assets/5e625b22-7b82-47b8-8aba-7c6750d70347" alt="image-20240726165115583" style="max-width: 100%;"></a></p>
+<p>并且在vscode上打开文件夹并打开终端<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/17c04643-2beb-48c6-bfe3-7ec560bedafd"><img src="https://github.com/user-attachments/assets/17c04643-2beb-48c6-bfe3-7ec560bedafd" alt="image-20240726165253023" style="max-width: 100%;"></a></p>
+<h3>2. 安装 Nest.js CLI</h3>
+<p>首先，我们需要安装 Nest.js CLI 来创建和管理 Nest.js 项目。运行以下命令来安装 CLI：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npm i -g @nestjs/cli</pre></div>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c4975f53-d249-4b52-9266-e995c7a34b7b"><img src="https://github.com/user-attachments/assets/c4975f53-d249-4b52-9266-e995c7a34b7b" alt="image-20240726164959578" style="max-width: 100%;"></a></p>
+<h3>3. 创建一个新项目</h3>
+<p>使用 CLI 创建一个新的 Nest.js 项目：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">nest new project-name</pre></div>
+<p>系统会提示你选择包管理器，可以选择 <code class="notranslate">npm</code> 或 <code class="notranslate">yarn</code>。选择后，CLI 会自动安装项目所需的依赖。</p>
+<p>我选择的是<code class="notranslate">npm</code></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e46c7319-ced2-40a8-9b70-b8a6cb2b44b2"><img src="https://github.com/user-attachments/assets/e46c7319-ced2-40a8-9b70-b8a6cb2b44b2" alt="image-20240726165535673" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/787bb254-7b31-4909-9140-d8cb6919b9f2"><img src="https://github.com/user-attachments/assets/787bb254-7b31-4909-9140-d8cb6919b9f2" alt="image-20240726165805834" style="max-width: 100%;"></a></p>
+<p>等待安装，成功后结果如下：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d5d7fa88-eef2-45ac-868c-48016df96be3"><img src="https://github.com/user-attachments/assets/d5d7fa88-eef2-45ac-868c-48016df96be3" alt="image-20240726165827763" style="max-width: 100%;"></a></p>
+<h3>4. 启动项目</h3>
+<p>进入创建的项目根目录</p>
+<pre class="notranslate"><code class="notranslate">cd my-nestjs-demo
+</code></pre>
+<p>然后启动项目</p>
+<pre class="notranslate"><code class="notranslate">npm run start
+</code></pre>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/411316b2-8138-4a81-bbe8-74b87ed923d8"><img src="https://github.com/user-attachments/assets/411316b2-8138-4a81-bbe8-74b87ed923d8" alt="image-20240726171116718" style="max-width: 100%;"></a></p>
+<h3>5. 验证成果</h3>
+<p>打开浏览器输入url：<code class="notranslate">localhost:3000</code></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/6ef0767d-885f-4c19-8c2b-2d6aaef13d27"><img src="https://github.com/user-attachments/assets/6ef0767d-885f-4c19-8c2b-2d6aaef13d27" alt="image-20240726171841656" style="max-width: 100%;"></a></p>
+<p>然后我们在vscode上打开另一个终端</p>
+<p>输入:</p>
+<pre class="notranslate"><code class="notranslate">npm run test
+</code></pre>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3b207614-63f8-4e97-a961-2fcd51b1942d"><img src="https://github.com/user-attachments/assets/3b207614-63f8-4e97-a961-2fcd51b1942d" alt="image-20240726171653550" style="max-width: 100%;"></a></p>
+<p><strong>恭喜！ 我们的项目就启动成功了！</strong></p>
+<p>并且在浏览器上成功访问！</p>
+<p>也通过了nest.js的测试模块测试！</p>
+<h1>项目描述</h1>
+<p>我们成功的启动了项目，接下来我们了解一下项目结构与代码</p>
+<h3>项目结构</h3>
+<p>创建的项目会有一个默认的结构，主要包括以下文件和文件夹：</p>
+<pre class="notranslate"><code class="notranslate">src
+ ├── app.controller.ts
+ ├── app.controller.spec.ts
+ ├── app.module.ts
+ ├── app.service.ts
+ └── main.ts
+</code></pre>
+<ul>
+<li><strong>app.controller.ts</strong>: 控制器，处理 HTTP 请求。</li>
+<li><strong>app.service.ts</strong>: 服务，包含业务逻辑。</li>
+<li><strong>app.module.ts</strong>: 模块，组织应用的结构。</li>
+<li><strong>main.ts</strong>: 应用入口文件。</li>
+</ul>
+<h3><code class="notranslate">main.ts</code></h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">NestFactory</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-smi">AppModule</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">await</span> <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">listen</span><span class="pl-kos">(</span><span class="pl-c1">3000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+<span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<p><code class="notranslate">main.ts</code>是应用程序的入口文件。</p>
+<ol>
+<li>
+<p><code class="notranslate">import { NestFactory } from '@nestjs/core';</code>：导入NestFactory，这是一个用于创建Nest应用程序实例的类。</p>
+</li>
+<li>
+<p><code class="notranslate">import { AppModule } from './app.module';</code>：导入应用的根模块（AppModule）。</p>
+</li>
+<li>
+<p><code class="notranslate">async function bootstrap() { ... }</code>：定义了一个异步函数bootstrap，它是应用程序的启动函数。</p>
+</li>
+<li>
+<p><code class="notranslate">const app = await NestFactory.create(AppModule);</code>：使用NestFactory工厂创建一个Nest应用程序实例，并传入根模块AppModule。</p>
+</li>
+<li>
+<p><code class="notranslate">await app.listen(3000);</code>：让应用监听3000端口。</p>
+</li>
+<li>
+<p><code class="notranslate">bootstrap();</code>：调用bootstrap函数启动应用。</p>
+</li>
+</ol>
+<h3><code class="notranslate">app.module.ts</code></h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Module</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">imports</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">{</span><span class="pl-kos">}</span></pre></div>
+<p><code class="notranslate">app.module.ts</code>定义了应用程序的根模块（AppModule）。</p>
+<ol>
+<li><code class="notranslate">import { Module } from '@nestjs/common';</code>：导入Module装饰器。</li>
+<li><code class="notranslate">import { AppController } from './app.controller';</code>：导入AppController。</li>
+<li><code class="notranslate">import { AppService } from './app.service';</code>：导入AppService。</li>
+<li><code class="notranslate">@Module({ ... })</code>：装饰器，定义一个模块。</li>
+<li><code class="notranslate">imports: []</code>：模块的导入数组，这里为空。</li>
+<li><code class="notranslate">controllers: [AppController]</code>：控制器的数组，包含AppController。</li>
+<li><code class="notranslate">providers: [AppService]</code>：提供者的数组，包含AppService。</li>
+<li><code class="notranslate">export class AppModule {}</code>：定义并导出AppModule类。</li>
+</ol>
+<h3><code class="notranslate">app.controller.ts</code></h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Controller</span><span class="pl-kos">,</span> <span class="pl-smi">Get</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
+  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">appService</span>: <span class="pl-smi">AppService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">appService</span><span class="pl-kos">.</span><span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<p><code class="notranslate">app.controller.ts</code>定义了一个控制器（AppController）。</p>
+<ol>
+<li>
+<p><code class="notranslate">import { Controller, Get } from '@nestjs/common';</code>：导入Nest.js的Controller和Get装饰器。</p>
+</li>
+<li>
+<p><code class="notranslate">import { AppService } from './app.service';</code>：导入服务（AppService）。</p>
+</li>
+<li>
+<p><code class="notranslate">@Controller()</code>：装饰器，标识这个类是一个控制器。</p>
+</li>
+<li>
+<p><code class="notranslate">export class AppController { ... }</code>：定义控制器类AppController。</p>
+</li>
+<li>
+<p><code class="notranslate">constructor(private readonly appService: AppService) {}</code>：通过依赖注入将AppService注入到控制器中。</p>
+</li>
+<li>
+<p><code class="notranslate">@Get()</code>：装饰器，定义一个GET请求的路由。</p>
+</li>
+<li>
+<p><code class="notranslate">getHello(): string { ... }</code>：定义一个处理GET请求的方法，调用AppService的getHello方法返回字符串。</p>
+</li>
+</ol>
+<h3><code class="notranslate">app.service.ts</code></h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Injectable</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppService</span> <span class="pl-kos">{</span>
+  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-s">'Hello World!'</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<p><code class="notranslate">app.service.ts</code>定义了一个服务（AppService）。</p>
+<ol>
+<li><code class="notranslate">import { Injectable } from '@nestjs/common';</code>：导入Injectable装饰器。</li>
+<li><code class="notranslate">@Injectable()</code>：装饰器，标识这个类是一个可以被注入的服务。</li>
+<li><code class="notranslate">export class AppService { ... }</code>：定义并导出AppService类。</li>
+<li><code class="notranslate">getHello(): string { ... }</code>：定义一个方法，返回字符串“Hello World!”。</li>
+</ol>
+<p>通过这些代码，可以看到这是一个简单的Nest.js应用程序，它定义了一个根模块（AppModule），一个控制器（AppController），以及一个服务（AppService）。控制器处理GET请求，并调用服务的方法来返回一个“Hello World!”字符串。</p>
+<h1>总结</h1>
+<p>我们通过本教程介绍了如何创建一个简单的 Nest.js 项目，包括如何创建控制器、服务和模块。我们可以根据需要扩展这个基础项目，添加更多功能和逻辑。感谢各位技术大佬的观看和点评！！！</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://TMDOG666.github.io">TMDOG 的博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","TMDOG666/TMDOG666.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>

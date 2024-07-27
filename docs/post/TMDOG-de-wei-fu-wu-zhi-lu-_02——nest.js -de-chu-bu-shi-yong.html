@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/174948015?v=4"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# TMDOG的微服务之路_02——Nest.js  的初步使用
+
+在上一篇博客中，我们介绍了如何在 Nest.js 中创建一个简单的应用程序，hello world！今天在这篇博客中，我们将进一步探讨如何使用 Nest.js 的 Controller 来处理 HTTP 请求，并了解service 与 module。">
+<meta property="og:title" content="TMDOG的微服务之路_02——nest.js 的初步使用">
+<meta property="og:description" content="# TMDOG的微服务之路_02——Nest.js  的初步使用
+
+在上一篇博客中，我们介绍了如何在 Nest.js 中创建一个简单的应用程序，hello world！今天在这篇博客中，我们将进一步探讨如何使用 Nest.js 的 Controller 来处理 HTTP 请求，并了解service 与 module。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://TMDOG666.github.io/post/TMDOG-de-wei-fu-wu-zhi-lu-_02%E2%80%94%E2%80%94nest.js%20-de-chu-bu-shi-yong.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
+<title>TMDOG的微服务之路_02——nest.js 的初步使用</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">TMDOG的微服务之路_02——nest.js 的初步使用</h1>
+<div class="title-right">
+    <a href="https://TMDOG666.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/TMDOG666/TMDOG666.github.io/issues/7" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>TMDOG的微服务之路_02——Nest.js  的初步使用</h1>
+<p>在上一篇博客中，我们介绍了如何在 Nest.js 中创建一个简单的应用程序，hello world！今天在这篇博客中，我们将进一步探讨如何使用 Nest.js 的 Controller 来处理 HTTP 请求，并了解service 与 module。我们将通过创建一个用户管理的功能，来展示如何使用各种 HTTP 请求方法。</p>
+<h3>1. 目录结构</h3>
+<p>首先，让我们看一下项目的目录结构：</p>
+<pre class="notranslate"><code class="notranslate">src
+├── app.controller.ts
+├── app.module.ts
+├── app.service.ts
+└── main.ts
+</code></pre>
+<h3>2. 入口文件 (<code class="notranslate">main.ts</code>)</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">NestFactory</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-smi">AppModule</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">await</span> <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">listen</span><span class="pl-kos">(</span><span class="pl-c1">3000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+<span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<p><code class="notranslate">main.ts</code> 文件是应用程序的入口。我们使用 <code class="notranslate">NestFactory.create</code> 方法来创建一个 Nest 应用实例，并让它监听 3000 端口。</p>
+<h3>3. 服务 (<code class="notranslate">app.service.ts</code>)</h3>
+<p>接下来，我们在之前的代码基础上对User数组对象的操作 <code class="notranslate">UsersService</code>。</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Injectable</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppService</span> <span class="pl-kos">{</span>
+  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-s">'Hello World!'</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-k">type</span> <span class="pl-smi">User</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>       <span class="pl-c">//定义一个简单的用户模板</span>
+  <span class="pl-c1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">;</span>
+  <span class="pl-c1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">UsersService</span> <span class="pl-kos">{</span>
+  <span class="pl-k">private</span> <span class="pl-c1">users</span>: <span class="pl-smi">User</span><span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span> <span class="pl-c">// 实例化用户数组对象</span>
+
+  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span> <span class="pl-c">// 初始化 users 数组</span>
+  <span class="pl-kos">}</span>
+
+<span class="pl-c">// 接下开就是对数组的CRUD了，这里不多赘述</span>
+  <span class="pl-k">public</span> <span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">Error</span><span class="pl-kos">(</span><span class="pl-s">'User already exists'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">public</span> <span class="pl-en">login</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">Error</span><span class="pl-kos">(</span><span class="pl-s">'User not found'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">password</span> <span class="pl-c1">!==</span> <span class="pl-s1">password</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">Error</span><span class="pl-kos">(</span><span class="pl-s">'Password is incorrect'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">public</span> <span class="pl-en">deleteUser</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">Error</span><span class="pl-kos">(</span><span class="pl-s">'User not found'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">filter</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">!==</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">public</span> <span class="pl-en">changePassword</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">Error</span><span class="pl-kos">(</span><span class="pl-s">'User not found'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">password</span> <span class="pl-c1">=</span> <span class="pl-s1">password</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  <span class="pl-k">public</span> <span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">User</span><span class="pl-kos">[</span><span class="pl-kos">]</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<ul>
+<li><code class="notranslate">UsersService</code> 则负责用户的注册、登录、更改密码、删除用户和获取所有用户。</li>
+<li><code class="notranslate">@Injectable()</code> 装饰器标识了一个可依赖注入的类，这样一来，Nest 的 IoC 容器就能够识别这个类，并将其注入到其他被注册的类或模块中。</li>
+</ul>
+<h3>4. 控制器 (<code class="notranslate">app.controller.ts</code>)</h3>
+<p>接下来来到我们的重点，我们在之前的基础上编写了，实现了对用户的请求处理 <code class="notranslate">UsersController</code>。</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Controller</span><span class="pl-kos">,</span> <span class="pl-smi">Get</span><span class="pl-kos">,</span> <span class="pl-smi">Post</span><span class="pl-kos">,</span> <span class="pl-smi">Res</span><span class="pl-kos">,</span> <span class="pl-smi">Req</span><span class="pl-kos">,</span> <span class="pl-smi">Put</span><span class="pl-kos">,</span> <span class="pl-smi">Delete</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Request</span><span class="pl-kos">,</span> <span class="pl-smi">Response</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'express'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
+  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">appService</span>: <span class="pl-smi">AppService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">appService</span><span class="pl-kos">.</span><span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-s">'users'</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">UsersController</span> <span class="pl-kos">{</span>
+  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">userService</span>: <span class="pl-smi">UsersService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Post</span><span class="pl-kos">(</span><span class="pl-s">'register'</span><span class="pl-kos">)</span>
+  <span class="pl-en">register</span><span class="pl-kos">(</span>@<span class="pl-smi">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Post</span><span class="pl-kos">(</span><span class="pl-s">'login'</span><span class="pl-kos">)</span>
+  <span class="pl-en">login</span><span class="pl-kos">(</span>@<span class="pl-smi">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">login</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Put</span><span class="pl-kos">(</span><span class="pl-s">':username'</span><span class="pl-kos">)</span>
+  <span class="pl-en">changePassword</span><span class="pl-kos">(</span>@<span class="pl-smi">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> username <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">params</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">changePassword</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Delete</span><span class="pl-kos">(</span><span class="pl-s">':username'</span><span class="pl-kos">)</span>
+  <span class="pl-en">deleteUser</span><span class="pl-kos">(</span>@<span class="pl-smi">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> username <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">params</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">deleteUser</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+  @<span class="pl-smi">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<ul>
+<li><code class="notranslate">UsersController</code> 则定义了多个方法来处理用户的注册、登录、更改密码和删除用户等操作。</li>
+<li><code class="notranslate">@Controller()</code> 装饰器定义了一个控制器类，它同样受到 IoC 容器的管理。我们可以把它理解为一个特殊的 <code class="notranslate">@Injectable()</code>，可以处理 HTTP 请求。例如，<code class="notranslate">@Controller('users')</code> 会截取到 <code class="notranslate">"/users"</code> 路径的请求。</li>
+<li><code class="notranslate">constructor(private readonly userService: UsersService) { }</code> 是控制器类的构造函数。在这里，我们可以初始化注册的服务实例（如 <code class="notranslate">UsersService</code>），这些服务实例由 Nest 的 IoC 容器自动注入，从而实现依赖注入。</li>
+<li><code class="notranslate">@Get() 、@Post('register')</code> 我们定义了具体的请求处理的方法，处理具体的HTTP请求，同样<code class="notranslate">@Post('register')</code>进一步截取到 <code class="notranslate">"/users/register"</code> 路径的请求。</li>
+<li><code class="notranslate">@Req()</code>定义了请求体，Nest 提供对底层平台的请求对象的访问（默认为 Express）。我们可以通过指示 Nest 通过在处理者的签名中添加装饰器来注入它来访问请求对象。我们还可以通过不同的注解获取自己想要的请求对象，以下是官方文档中的内容：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b19e30dc-9e93-4c48-8c92-106d506db281"><img src="https://github.com/user-attachments/assets/b19e30dc-9e93-4c48-8c92-106d506db281" alt="image" style="max-width: 100%;"></a></li>
+</ul>
+<h3>5. 模块 (<code class="notranslate">app.module.ts</code>)</h3>
+<p>最后，我们定义根模块 <code class="notranslate">AppModule</code>。</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Module</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppController</span><span class="pl-kos">,</span> <span class="pl-smi">UsersController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">imports</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppController</span><span class="pl-kos">,</span> <span class="pl-smi">UsersController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">{</span><span class="pl-kos">}</span></pre></div>
+<p><code class="notranslate">AppModule</code> 将所有的控制器和服务注册到 Nest.js 应用程序中。<br>
+在这里我们就可以统一管理需要注册的模块。</p>
+<h3>6. 成果展示</h3>
+<h4>我们使用 Postman 测试 Nest.js 应用</h4>
+<p>在这部分，我们将展示如何使用 Postman 测试上面的 <code class="notranslate">UsersController</code> 中的各个端点。首先确保应用已经运行，监听在 <code class="notranslate">localhost:3000</code>。然后按照以下步骤进行测试。</p>
+<h4>1. 测试注册用户 (<code class="notranslate">/users/register</code>)</h4>
+<p><strong>请求类型</strong>：POST</p>
+<p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/register</code></p>
+<p><strong>请求体</strong>（JSON 格式）：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+}</pre></div>
+<p><strong>预期响应</strong>：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<p><strong>实际响应</strong>：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465"><img src="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465" alt="image" style="max-width: 100%;"></a></p>
+<h4>2. 测试用户登录 (<code class="notranslate">/users/login</code>)</h4>
+<p><strong>请求类型</strong>：POST</p>
+<p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/login</code></p>
+<p><strong>请求体</strong>（JSON 格式）：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+}</pre></div>
+<p><strong>预期响应</strong>：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<p><strong>实际响应</strong>：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab"><img src="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab" alt="image" style="max-width: 100%;"></a></p>
+<h4>3. 测试修改密码 (<code class="notranslate">/users/:username</code>)</h4>
+<p><strong>请求类型</strong>：PUT</p>
+<p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/tmdog</code></p>
+<p><strong>请求体</strong>（JSON 格式）：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+    <span class="pl-ent">"password"</span>:<span class="pl-s"><span class="pl-pds">"</span>114515<span class="pl-pds">"</span></span>
+}</pre></div>
+<p><strong>预期响应</strong>：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<p><strong>实际响应</strong>：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a"><img src="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a" alt="image" style="max-width: 100%;"></a></p>
+<h4>4. 测试删除用户 (<code class="notranslate">/users/:username</code>)</h4>
+<p><strong>请求类型</strong>：DELETE</p>
+<p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/tmdog</code></p>
+<p><strong>预期响应</strong>：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<p><strong>实际响应</strong>：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886"><img src="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886" alt="image" style="max-width: 100%;"></a></p>
+<h4>5. 测试获取所有用户 (<code class="notranslate">/users</code>)</h4>
+<p>我们先添加几个用户</p>
+<p><strong>请求类型</strong>：GET</p>
+<p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users</code></p>
+<p><strong>预期响应</strong>：</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">[
+    {
+        <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+    },
+    {
+        <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog666<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+    },
+    {
+        <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog233<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+    }
+]</pre></div>
+<p><strong>实际响应</strong>：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0"><img src="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0" alt="image" style="max-width: 100%;"></a></p>
+<p>我们就完成了接口的初步测试，这是一个简单的示例，我们并没有给出一个标准统一的响应，所以结果略为简陋</p>
+<h2>结论</h2>
+<p>在这篇博客中，我们展示了如何在 Nest.js 中使用控制器来处理各种 HTTP 请求。我们创建了一个简单的用户管理服务，涵盖了用户的注册、登录、更改密码、删除用户和获取所有用户等操作。</p>
+<p>当我们具体进入到代码编写之后，学习过Spring框架的小伙伴会非常熟悉，Nest.js和Spring框架是同一种思想——AOP（面向切面编程），即在应用程序的不同部分中分离关注点，尤其是横切关注点，如日志记录、安全性、事务管理等。这种方式提高了代码的可维护性和可读性。</p>
+<p>在下一个博客中，我们将进一步探讨 Nest.js 的其他功能，敬请期待。</p>
+<p>通过这些简单的示例代码，希望你对 Nest.js 的控制器有了初步的了解。<br>
+如果各位技术大佬有任何问题或建议，请在评论区留言。</p>
+<p>感谢阅读！</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://TMDOG666.github.io">TMDOG 的博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","TMDOG666/TMDOG666.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>

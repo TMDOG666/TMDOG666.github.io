@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/174948015?v=4"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# TMDOG的微服务之路_03——Nest.js 的中间件
+## 博客地址：[TMDOG的博客](https://blog.tmdog114514.icu)
+
+在上一篇博客中，我们实现了一个简易的用户管理api的功能。">
+<meta property="og:title" content="TMDOG的微服务之路_03——Nest.js  的中间件">
+<meta property="og:description" content="# TMDOG的微服务之路_03——Nest.js 的中间件
+## 博客地址：[TMDOG的博客](https://blog.tmdog114514.icu)
+
+在上一篇博客中，我们实现了一个简易的用户管理api的功能。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://TMDOG666.github.io/post/TMDOG-de-wei-fu-wu-zhi-lu-_03%E2%80%94%E2%80%94Nest.js%20%20-de-zhong-jian-jian.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
+<title>TMDOG的微服务之路_03——Nest.js  的中间件</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">TMDOG的微服务之路_03——Nest.js  的中间件</h1>
+<div class="title-right">
+    <a href="https://TMDOG666.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/TMDOG666/TMDOG666.github.io/issues/8" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>TMDOG的微服务之路_03——Nest.js 的中间件</h1>
+<h2>博客地址：<a href="https://blog.tmdog114514.icu" rel="nofollow">TMDOG的博客</a></h2>
+<p>在上一篇博客中，我们实现了一个简易的用户管理api的功能。在此基础上，我们将继续探讨如何在 Nest.js 中使用中间件。中间件是处理 HTTP 请求的一个重要环节，可以在请求到达控制器之前对其进行修改、验证或日志记录等操作。我们将通过两个示例来详细讲解中间件的使用：日志记录中间件和 JWT 身份验证中间件。</p>
+<h2>日志记录中间件</h2>
+<h3>1. 创建日志记录中间件</h3>
+<p>在我们上一篇文章中，我们的api请求发生后并不能显示在控制台上，导致我们调试接口很不方便，所以我们可以通过中间件的方式将日志输出在控制台上。</p>
+<p>日志记录中间件用于记录每个 HTTP 请求的信息，例如请求方法、URL、状态码、响应长度和用户代理。我们首先在<code class="notranslate">src\common\middlewares</code>下创建一个日志记录中间件<code class="notranslate">logger.middlewares.ts</code>。</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Injectable</span><span class="pl-kos">,</span> <span class="pl-smi">NestMiddleware</span><span class="pl-kos">,</span> <span class="pl-smi">Logger</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Request</span><span class="pl-kos">,</span> <span class="pl-smi">Response</span><span class="pl-kos">,</span> <span class="pl-smi">NextFunction</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'express'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">LoggerMiddleware</span> <span class="pl-k">implements</span> <span class="pl-smi">NestMiddleware</span> <span class="pl-kos">{</span>
+  <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-c1">logger</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-smi">Logger</span><span class="pl-kos">(</span><span class="pl-s">'HTTP'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+  <span class="pl-en">use</span><span class="pl-kos">(</span><span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">,</span> <span class="pl-s1">res</span>: <span class="pl-smi">Response</span><span class="pl-kos">,</span> <span class="pl-s1">next</span>: <span class="pl-smi">NextFunction</span><span class="pl-kos">)</span>: <span class="pl-smi"><span class="pl-k">void</span></span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> method<span class="pl-kos">,</span> originalUrl <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-s1">userAgent</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'user-agent'</span><span class="pl-kos">)</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+
+    <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">on</span><span class="pl-kos">(</span><span class="pl-s">'finish'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+      <span class="pl-k">const</span> <span class="pl-kos">{</span> statusCode <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">res</span><span class="pl-kos">;</span>
+      <span class="pl-k">const</span> <span class="pl-s1">contentLength</span> <span class="pl-c1">=</span> <span class="pl-s1">res</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s">'content-length'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+      <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">logger</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span>
+        <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">method</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">originalUrl</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">statusCode</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">contentLength</span><span class="pl-kos">}</span></span> - <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">userAgent</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">,</span>
+      <span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+    <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h4>解释：</h4>
+<ul>
+<li><code class="notranslate">LoggerMiddleware</code> 类实现了 <code class="notranslate">NestMiddleware</code> 接口。</li>
+<li>实例化对于HTTP请求的日志对象<code class="notranslate">Logger('HTTP')</code></li>
+<li><code class="notranslate">use</code> 方法接受 <code class="notranslate">Request</code>、<code class="notranslate">Response</code> 和 <code class="notranslate">NextFunction</code> 参数，并在Reguest对象监听请求事件。</li>
+<li>中间件记录了请求的 <code class="notranslate">method</code>、<code class="notranslate">originalUrl</code> 和 <code class="notranslate">user-agent</code>，在响应完成后记录 <code class="notranslate">statusCode</code> 和 <code class="notranslate">contentLength</code>，然后通过 <code class="notranslate">Logger</code> 打印在控制台上。</li>
+</ul>
+<h3>2.在<code class="notranslate">module</code>中挂载中间件</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">MiddlewareConsumer</span><span class="pl-kos">,</span> <span class="pl-smi">Module</span><span class="pl-kos">,</span> <span class="pl-smi">NestModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppController</span><span class="pl-kos">,</span> <span class="pl-smi">UsersController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">LoggerMiddleware</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">"./common/middlewares/logger.middlewares"</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">imports</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppController</span><span class="pl-kos">,</span> <span class="pl-smi">UsersController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-k">implements</span> <span class="pl-smi">NestModule</span> <span class="pl-kos">{</span>
+  <span class="pl-en">configure</span><span class="pl-kos">(</span><span class="pl-s1">consumer</span>: <span class="pl-smi">MiddlewareConsumer</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">consumer</span>
+      <span class="pl-kos">.</span><span class="pl-en">apply</span><span class="pl-kos">(</span><span class="pl-smi">LoggerMiddleware</span><span class="pl-kos">)</span>
+      <span class="pl-kos">.</span><span class="pl-en">forRoutes</span><span class="pl-kos">(</span><span class="pl-s">'*'</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span><span class="pl-kos"></span></pre></div>
+<h4>解释</h4>
+<ul>
+<li><code class="notranslate">AppModule</code>实现了<code class="notranslate"> NestModule</code>接口</li>
+<li>实现函数<code class="notranslate">configure</code>传入<code class="notranslate">MiddlewareConsumer</code>对象</li>
+<li>通过<code class="notranslate">apply(LoggerMiddleware)</code>挂载中间件</li>
+<li>并指定作用的路由<code class="notranslate">*</code>通配符，指定所有路由，也可以指定特定路由</li>
+</ul>
+<p>同样中间件也可以通过依赖注入的方式去挂载，其他的代码都不用改动</p>
+<h3>简单测试</h3>
+<p>启动项目</p>
+<p>postman中测试：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/07e52784-162a-4d5e-a42d-57792190c53c"><img src="https://github.com/user-attachments/assets/07e52784-162a-4d5e-a42d-57792190c53c" alt="image" style="max-width: 100%;"></a></p>
+<p>控制台显示：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8ff3d83f-3183-4d4b-8e1b-4eaa833576ef"><img src="https://github.com/user-attachments/assets/8ff3d83f-3183-4d4b-8e1b-4eaa833576ef" alt="image" style="max-width: 100%;"></a></p>
+<p>恭喜！我们成功使用中间件实现了请求日志的展示！</p>
+<h2>JWT 身份验证中间件</h2>
+<p>JWT 身份验证中间件用于验证请求中的 JWT，并将解码后的用户信息添加到请求对象中。我们需要 <code class="notranslate">jsonwebtoken</code> 库来生成和验证 JWT。</p>
+<h3>1. 准备工作</h3>
+<p>我们在项目根目录下创建<code class="notranslate">.env</code>文件，并写入<code class="notranslate">JWT_SECRET="your-secret"</code>,来配置jwt的密钥（可以随便写）</p>
+<pre class="notranslate"><code class="notranslate">JWT_SECRET="your-secret"
+</code></pre>
+<p>安装依赖：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">npm install jsonwebtoken @nestjs/jwt dotenv</pre></div>
+<p>然后在<code class="notranslate">main.ts</code>上加入一行：<code class="notranslate">require('dotenv').config();</code>。允许读取.env文件中的内容</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
+<span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'dotenv'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">config</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+
+<span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">NestFactory</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-smi">AppModule</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-k">await</span> <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">listen</span><span class="pl-kos">(</span><span class="pl-c1">3000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+<span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<h3>2.  创建 JWT 中间件</h3>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Injectable</span><span class="pl-kos">,</span> <span class="pl-smi">NestMiddleware</span><span class="pl-kos">,</span> <span class="pl-smi">UnauthorizedException</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Request</span><span class="pl-kos">,</span> <span class="pl-smi">Response</span><span class="pl-kos">,</span> <span class="pl-smi">NextFunction</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'express'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-c1">*</span> <span class="pl-k">as</span> <span class="pl-s1">jwt</span> <span class="pl-k">from</span> <span class="pl-s">'jsonwebtoken'</span><span class="pl-kos">;</span>
+
+<span class="pl-k">interface</span> <span class="pl-smi">JwtPayload</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">;</span>
+    <span class="pl-c1">iat</span>: <span class="pl-smi">number</span><span class="pl-kos">;</span>
+    <span class="pl-c1">exp</span>: <span class="pl-smi">number</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
+
+@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">JwtMiddleware</span> <span class="pl-k">implements</span> <span class="pl-smi">NestMiddleware</span> <span class="pl-kos">{</span>
+  <span class="pl-en">use</span><span class="pl-kos">(</span><span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">,</span> <span class="pl-s1">res</span>: <span class="pl-smi">Response</span><span class="pl-kos">,</span> <span class="pl-s1">next</span>: <span class="pl-smi">NextFunction</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-s1">authHeader</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">headers</span><span class="pl-kos">.</span><span class="pl-c1">authorization</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">authHeader</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">UnauthorizedException</span><span class="pl-kos">(</span><span class="pl-s">'Authorization header is missing'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-k">const</span> <span class="pl-s1">token</span> <span class="pl-c1">=</span> <span class="pl-s1">authHeader</span><span class="pl-kos">.</span><span class="pl-en">split</span><span class="pl-kos">(</span><span class="pl-s">' '</span><span class="pl-kos">)</span><span class="pl-kos">[</span><span class="pl-c1">1</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">token</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">UnauthorizedException</span><span class="pl-kos">(</span><span class="pl-s">'Token is missing'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-k">try</span> <span class="pl-kos">{</span>
+      <span class="pl-k">const</span> <span class="pl-s1">decoded</span>: <span class="pl-smi">JwtPayload</span> <span class="pl-c1">=</span> <span class="pl-s1">jwt</span><span class="pl-kos">.</span><span class="pl-en">verify</span><span class="pl-kos">(</span><span class="pl-s1">token</span><span class="pl-kos">,</span> <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">JWT_SECRET</span><span class="pl-kos">)</span> <span class="pl-k">as</span> <span class="pl-smi">JwtPayload</span><span class="pl-kos">;</span>
+      <span class="pl-kos">(</span><span class="pl-s1">req</span> <span class="pl-k">as</span> <span class="pl-smi">any</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-c1">user</span> <span class="pl-c1">=</span> <span class="pl-s1">decoded</span><span class="pl-kos">;</span>
+      <span class="pl-en">next</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span> <span class="pl-k">catch</span> <span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+      <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">UnauthorizedException</span><span class="pl-kos">(</span><span class="pl-s">'Invalid token'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h4>解释：</h4>
+<ul>
+<li><code class="notranslate">JwtPayload</code>对于jwt解码数据接口的定义</li>
+<li><code class="notranslate">JwtMiddleware</code> 类实现了 <code class="notranslate">NestMiddleware</code> 接口。</li>
+<li><code class="notranslate">use</code> 方法中，从请求头中提取 <code class="notranslate">Authorization</code> 字段，如果不存在则抛出 <code class="notranslate">UnauthorizedException</code> 异常。</li>
+<li>从 <code class="notranslate">Authorization</code> 头中提取出 JWT（通常以 <code class="notranslate">Bearer token</code> 的形式传递）。</li>
+<li>使用 <code class="notranslate">jsonwebtoken</code> 库的 <code class="notranslate">verify</code> 方法验证 JWT 的有效性，并解码出 JWT 的负载部分（<code class="notranslate">payload</code>）。</li>
+<li>将解码出的用户信息（负载部分）添加到请求对象的 <code class="notranslate">user</code> 属性中。</li>
+<li>调用 <code class="notranslate">next</code> 函数将请求传递给下一个中间件或控制器。</li>
+</ul>
+<h4>配置中间件</h4>
+<p>我们需要在应用程序模块中使用这些中间件。在 <code class="notranslate">app.module.ts</code> 中注册中间件：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">MiddlewareConsumer</span><span class="pl-kos">,</span> <span class="pl-smi">Module</span><span class="pl-kos">,</span> <span class="pl-smi">NestModule</span><span class="pl-kos">,</span> <span class="pl-smi">RequestMethod</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppController</span><span class="pl-kos">,</span> <span class="pl-smi">UsersController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">LoggerMiddleware</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">"./common/middlewares/logger.middlewares"</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">JwtMiddleware</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./common/middlewares/jwt.middlewares'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+  <span class="pl-c1">imports</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppController</span><span class="pl-kos">,</span> <span class="pl-smi">UsersController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppService</span><span class="pl-kos">,</span> <span class="pl-smi">UsersService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-k">implements</span> <span class="pl-smi">NestModule</span> <span class="pl-kos">{</span>
+  <span class="pl-en">configure</span><span class="pl-kos">(</span><span class="pl-s1">consumer</span>: <span class="pl-smi">MiddlewareConsumer</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s1">consumer</span>
+      <span class="pl-kos">.</span><span class="pl-en">apply</span><span class="pl-kos">(</span><span class="pl-smi">LoggerMiddleware</span><span class="pl-kos">)</span>
+      <span class="pl-kos">.</span><span class="pl-en">forRoutes</span><span class="pl-kos">(</span><span class="pl-s">'*'</span><span class="pl-kos">)</span>
+    <span class="pl-s1">consumer</span>
+      <span class="pl-kos">.</span><span class="pl-en">apply</span><span class="pl-kos">(</span><span class="pl-smi">JwtMiddleware</span><span class="pl-kos">)</span>
+      <span class="pl-kos">.</span><span class="pl-en">exclude</span><span class="pl-kos">(</span>
+        <span class="pl-kos">{</span><span class="pl-c1">path</span>:<span class="pl-s">'users/register'</span><span class="pl-kos">,</span> <span class="pl-c1">method</span>: <span class="pl-smi">RequestMethod</span><span class="pl-kos">.</span><span class="pl-c1">POST</span><span class="pl-kos">}</span><span class="pl-kos">,</span>
+        <span class="pl-kos">{</span><span class="pl-c1">path</span>:<span class="pl-s">'users/login'</span><span class="pl-kos">,</span> <span class="pl-c1">method</span>: <span class="pl-smi">RequestMethod</span><span class="pl-kos">.</span><span class="pl-c1">POST</span><span class="pl-kos">}</span>
+      <span class="pl-kos">)</span>
+      <span class="pl-kos">.</span><span class="pl-en">forRoutes</span><span class="pl-kos">(</span><span class="pl-smi">UsersController</span><span class="pl-kos">)</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h4>解释</h4>
+<ul>
+<li>同样我们使用<code class="notranslate">consumer</code>对象挂载中间件，但我们使用了<code class="notranslate">exclude</code>去剔除不需要的jwt作用的路由</li>
+</ul>
+<h3>3. 修改登录的逻辑生成jwt token</h3>
+<p>我们在原有的代码上添加以下代码：</p>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-c1">*</span> <span class="pl-k">as</span> <span class="pl-s1">jwt</span> <span class="pl-k">from</span> <span class="pl-s">'jsonwebtoken'</span><span class="pl-kos">;</span>
+
+@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">UsersController</span> <span class="pl-kos">{</span>
+  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">userService</span>: <span class="pl-smi">UsersService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-kos">}</span>
+
+ @<span class="pl-smi">Post</span><span class="pl-kos">(</span><span class="pl-s">'login'</span><span class="pl-kos">)</span>
+  <span class="pl-en">login</span><span class="pl-kos">(</span>@<span class="pl-smi">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-s1">isLogin</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">login</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-s1">jwtToken</span> <span class="pl-c1">=</span> <span class="pl-s1">jwt</span><span class="pl-kos">.</span><span class="pl-en">sign</span><span class="pl-kos">(</span><span class="pl-kos">{</span> username <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s1">process</span><span class="pl-kos">.</span><span class="pl-c1">env</span><span class="pl-kos">.</span><span class="pl-c1">JWT_SECRET</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> <span class="pl-c1">expiresIn</span>: <span class="pl-s">'1h'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-kos">{</span><span class="pl-c1">result</span>:<span class="pl-s1">isLogin</span><span class="pl-kos">,</span> <span class="pl-c1">token</span>:<span class="pl-s1">jwtToken</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+
+@<span class="pl-smi">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-en">getAllUsers</span><span class="pl-kos">(</span>@<span class="pl-smi">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Req</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">const</span> <span class="pl-kos">{</span> user <span class="pl-kos">}</span> <span class="pl-c1">=</span><span class="pl-s1">req</span><span class="pl-kos">;</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">user</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div>
+<h4>解释</h4>
+<ul>
+<li><code class="notranslate">const jwtToken = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });</code>注册jwt token过期时长1h</li>
+<li>在<code class="notranslate">getAllUsers</code>中打印jwt中间件加入的<code class="notranslate">req.user</code>对象</li>
+</ul>
+<h3>测试</h3>
+<h4>注册：</h4>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/942f465b-630d-4e13-b975-1a0bbf5f5bec"><img src="https://github.com/user-attachments/assets/942f465b-630d-4e13-b975-1a0bbf5f5bec" alt="image" style="max-width: 100%;"></a></p>
+<h4>登录：</h4>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d2d8ea7d-ed2b-4c7a-b425-7b036e17f859"><img src="https://github.com/user-attachments/assets/d2d8ea7d-ed2b-4c7a-b425-7b036e17f859" alt="image" style="max-width: 100%;"></a><br>
+我们看见，成功返回了jwt token</p>
+<h4>无token操作：</h4>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/fec88ba6-4557-4d89-8cda-6d4342c52d90"><img src="https://github.com/user-attachments/assets/fec88ba6-4557-4d89-8cda-6d4342c52d90" alt="image" style="max-width: 100%;"></a></p>
+<h4>有token操作：</h4>
+<p>我们将登录获得的jwt token复制到 authorization header中<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8773f536-2caf-4421-af6f-8e5c62d47db8"><img src="https://github.com/user-attachments/assets/8773f536-2caf-4421-af6f-8e5c62d47db8" alt="image" style="max-width: 100%;"></a></p>
+<h4>控制台中我们看见打印的对象：</h4>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3a207f28-2b6a-4d39-a32f-a0bb0df44986"><img src="https://github.com/user-attachments/assets/3a207f28-2b6a-4d39-a32f-a0bb0df44986" alt="image" style="max-width: 100%;"></a></p>
+<p>恭喜！我们完成了jwt中间件的使用！</p>
+<h2>结论</h2>
+<p>通过以上步骤，我们成功地在 Nest.js 应用中添加并使用了日志记录中间件和 JWT 身份验证中间件。中间件在处理请求时起到了重要的作用，可以用于记录日志、验证身份、处理错误等。希望这篇博客能帮助你更好地理解和使用 Nest.js 中间件。</p>
+<p>在下一个博客中，我们将进一步探讨 Nest.js 的其他功能，敬请期待。</p>
+<p>如果各位技术大佬有任何问题或建议，请在评论区留言。</p>
+<p>感谢阅读！</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://TMDOG666.github.io">TMDOG 的博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","TMDOG666/TMDOG666.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>

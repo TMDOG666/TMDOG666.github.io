@@ -170,7 +170,7 @@ create role repl login replication encrypted password <span class="pl-s"><span c
 此次备份是将整个数据库文件从主服务器中备份下来，而不是通过流的形式备份</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">pg_basebackup -Fp --progress -D /home/opt/postgresql-16.0/data/ -R -h <span class="pl-k">&lt;</span>主服务器IP<span class="pl-k">&gt;</span> -p 5432 -U repl --password</pre></div>
 <p>输入密码：repl</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b0ae5208-2447-4994-9a00-b12ea0bc5f27"><img src="https://github.com/user-attachments/assets/b0ae5208-2447-4994-9a00-b12ea0bc5f27" alt="image-20241102200723595" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0bdafeb5-5604-4a0f-9a81-73f40276956e"><img src="https://github.com/user-attachments/assets/0bdafeb5-5604-4a0f-9a81-73f40276956e" alt="image-20241102201145267" style="max-width: 100%;"></a></p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f33e479a-c5c3-4d10-8b32-78670263da16"><img src="https://github.com/user-attachments/assets/f33e479a-c5c3-4d10-8b32-78670263da16" alt="image" style="max-width: 100%;"></a></p>
 <p>exit退出</p>
 <h3>13. 复制数据到宿主机</h3>

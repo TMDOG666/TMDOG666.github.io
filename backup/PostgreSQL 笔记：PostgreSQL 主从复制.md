@@ -142,7 +142,8 @@ pg_basebackup -Fp --progress -D /home/opt/postgresql-16.0/data/ -R -h <主服务
 
 输入密码：repl
 
-![image-20241102200723595](https://github.com/user-attachments/assets/b0ae5208-2447-4994-9a00-b12ea0bc5f27)
+
+![image-20241102201145267](https://github.com/user-attachments/assets/0bdafeb5-5604-4a0f-9a81-73f40276956e)
 
 ![image](https://github.com/user-attachments/assets/f33e479a-c5c3-4d10-8b32-78670263da16)
 

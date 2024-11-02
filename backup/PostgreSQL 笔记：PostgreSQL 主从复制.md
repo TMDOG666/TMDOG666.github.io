@@ -1,5 +1,7 @@
 ## PostgreSQL 笔记：PostgreSQL 主从复制
 
+**博客地址：[TMDOG 的博客](https://blog.tmdog114514.icu/)**
+
 在现代应用程序中，数据库的高可用性和扩展性是至关重要的。PostgreSQL 提供了主从复制功能，可以在多个数据库实例之间复制数据，以实现冗余和负载均衡。本文将介绍如何在 Docker 环境中构建PostgreSQL 主从复制环境。
 
 ### 1. 主从复制原理

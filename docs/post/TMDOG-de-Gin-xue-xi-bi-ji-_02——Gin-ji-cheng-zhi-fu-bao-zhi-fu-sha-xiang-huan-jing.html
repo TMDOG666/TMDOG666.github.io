@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/174948015?v=4"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# TMDOG的Gin学习笔记_02——Gin集成支付宝支付沙箱环境
+
+## 博客地址：[TMDOG的博客](https://blog.tmdog114514.icu/)
+
+**作者自述：**  
+最近忙着整理自己的项目代码，终于有时间更新一下博客。">
+<meta property="og:title" content="TMDOG的Gin学习笔记_02——Gin集成支付宝支付沙箱环境">
+<meta property="og:description" content="# TMDOG的Gin学习笔记_02——Gin集成支付宝支付沙箱环境
+
+## 博客地址：[TMDOG的博客](https://blog.tmdog114514.icu/)
+
+**作者自述：**  
+最近忙着整理自己的项目代码，终于有时间更新一下博客。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://TMDOG666.github.io/post/TMDOG-de-Gin-xue-xi-bi-ji-_02%E2%80%94%E2%80%94Gin-ji-cheng-zhi-fu-bao-zhi-fu-sha-xiang-huan-jing.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
+<title>TMDOG的Gin学习笔记_02——Gin集成支付宝支付沙箱环境</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">TMDOG的Gin学习笔记_02——Gin集成支付宝支付沙箱环境</h1>
+<div class="title-right">
+    <a href="https://TMDOG666.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/TMDOG666/TMDOG666.github.io/issues/17" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>TMDOG的Gin学习笔记_02——Gin集成支付宝支付沙箱环境</h1>
+<h2>博客地址：<a href="https://blog.tmdog114514.icu/" rel="nofollow">TMDOG的博客</a></h2>
+<p><strong>作者自述：</strong><br>
+最近忙着整理自己的项目代码，终于有时间更新一下博客。这次的内容是关于如何在Gin框架下集成支付宝的支付沙箱环境，具体包括如何初始化支付宝的SDK、生成支付链接和处理回调请求。不同于NestJS笔记，Gin学习笔记更专注于业务逻辑，而支付宝支付集成是大多数电商项目中不可缺少的部分，所以这一篇笔记对我来说也非常重要。</p>
+<h2>学习目标</h2>
+<p>学习如何将支付宝支付集成到Gin框架下，实现在沙箱环境中进行支付流程的模拟。</p>
+<p><strong>预期使用的技术栈：</strong><br>
+Gin、支付宝SDK、Go</p>
+<h2>支付宝支付沙箱环境配置</h2>
+<h3>1. 创建支付宝开放平台应用</h3>
+<p>首先，你需要在支付宝开放平台上创建一个应用：</p>
+<ul>
+<li>
+<p>访问<a href="https://open.alipay.com/api" rel="nofollow">支付宝开放平台</a>。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7787281c-beb6-46a4-a9b3-16a9957048c1"><img src="https://github.com/user-attachments/assets/7787281c-beb6-46a4-a9b3-16a9957048c1" alt="image" style="max-width: 100%;"></a></p>
+</li>
+<li>
+<p>使用支付宝扫码登陆并进入控制台。</p>
+</li>
+<li>
+<p>向下划，在页面下面进入沙箱环境。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4e0823f1-900a-4076-8a9d-667365553569"><img src="https://github.com/user-attachments/assets/4e0823f1-900a-4076-8a9d-667365553569" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/866ce08e-c9d6-45eb-8965-8b73423f665c"><img src="https://github.com/user-attachments/assets/866ce08e-c9d6-45eb-8965-8b73423f665c" alt="image" style="max-width: 100%;"></a></p>
+</li>
+<li>
+<p>在<code class="notranslate">接口加签方式</code>中选择系统默认的证书模式，启用并查看<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/6d81a260-d427-48d3-b758-fe7d8761b1f6"><img src="https://github.com/user-attachments/assets/6d81a260-d427-48d3-b758-fe7d8761b1f6" alt="image" style="max-width: 100%;"></a></p>
+</li>
+<li>
+<p>然后下载所有证书并，复制好应用私钥<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f274f502-a995-40c6-b35a-92b06ba28725"><img src="https://github.com/user-attachments/assets/f274f502-a995-40c6-b35a-92b06ba28725" alt="image" style="max-width: 100%;"></a></p>
+</li>
+<li>
+<p>在<code class="notranslate">接口内容加密方式</code>中获取密钥并保存<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/513f1399-c54b-4d64-92a0-41b0956631dd"><img src="https://github.com/user-attachments/assets/513f1399-c54b-4d64-92a0-41b0956631dd" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b3743890-7afb-45c4-b300-abe2c010572e"><img src="https://github.com/user-attachments/assets/b3743890-7afb-45c4-b300-abe2c010572e" alt="image" style="max-width: 100%;"></a></p>
+</li>
+</ul>
+<h3>2. 安装支付宝SDK</h3>
+<p>支付宝官方提供了Go语言SDK，使用以下命令进行安装：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">go get github.com/smartwalle/alipay/v3</pre></div>
+<h3>3. 完整代码示例</h3>
+<p>我们将下载的证书放在项目目录下<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c160a670-ffde-46e2-bbf3-c124f771b550"><img src="https://github.com/user-attachments/assets/c160a670-ffde-46e2-bbf3-c124f771b550" alt="image" style="max-width: 100%;"></a></p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">package</span> main
+
+<span class="pl-k">import</span> (
+	<span class="pl-s">"context"</span>
+	<span class="pl-s">"fmt"</span>
+	<span class="pl-s">"github.com/gin-contrib/cors"</span>
+	<span class="pl-s">"github.com/gin-gonic/gin"</span>
+	<span class="pl-s">"github.com/smartwalle/alipay/v3"</span>
+	<span class="pl-s">"github.com/smartwalle/xid"</span>
+	<span class="pl-s">"log"</span>
+	<span class="pl-s">"net/http"</span>
+	<span class="pl-s">"time"</span>
+)
+
+<span class="pl-k">var</span> <span class="pl-s1">client</span> <span class="pl-c1">*</span>alipay.<span class="pl-smi">Client</span>
+
+<span class="pl-k">const</span> (
+	<span class="pl-s1">kAppId</span>        <span class="pl-c1">=</span> <span class="pl-s">"APPID"</span>
+	<span class="pl-s1">kPrivateKey</span>   <span class="pl-c1">=</span> <span class="pl-s">"刚才保存的私钥"</span>
+	<span class="pl-s1">kServerPort</span>   <span class="pl-c1">=</span> <span class="pl-s">"9989"</span>                      <span class="pl-c">//端口</span>
+	<span class="pl-s1">kServerDomain</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:9989"</span><span class="pl-c">//回调地址</span>
+	<span class="pl-s1">kSecretKey</span> <span class="pl-c1">=</span> <span class="pl-s">"接口内容加密密钥"</span><span class="pl-c">// 内容加密密钥</span>
+)
+
+<span class="pl-k">func</span> <span class="pl-en">main</span>() {
+	<span class="pl-k">var</span> <span class="pl-s1">err</span> <span class="pl-smi">error</span>
+	
+	<span class="pl-c">// 初始化支付宝</span>
+	<span class="pl-k">if</span> <span class="pl-s1">client</span>, <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">alipay</span>.<span class="pl-en">New</span>(<span class="pl-s1">kAppId</span>, <span class="pl-s1">kPrivateKey</span>, <span class="pl-c1">false</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"初始化支付宝失败"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 加载证书</span>
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">LoadAppCertPublicKeyFromFile</span>(<span class="pl-s">"appPublicCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-k">return</span>
+	}
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">LoadAliPayRootCertFromFile</span>(<span class="pl-s">"alipayRootCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-k">return</span>
+	}
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">LoadAlipayCertPublicKeyFromFile</span>(<span class="pl-s">"alipayPublicCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">SetEncryptKey</span>(<span class="pl-s1">kSecretKey</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载内容加密密钥发生错误"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 配置 CORS 中间件</span>
+	<span class="pl-s1">corsConfig</span> <span class="pl-c1">:=</span> <span class="pl-s1">cors</span>.<span class="pl-en">DefaultConfig</span>()
+	<span class="pl-s1">corsConfig</span>.<span class="pl-c1">AllowAllOrigins</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span>                                   <span class="pl-c">// 允许所有域名</span>
+	<span class="pl-s1">corsConfig</span>.<span class="pl-c1">AllowMethods</span> <span class="pl-c1">=</span> []<span class="pl-smi">string</span>{<span class="pl-s">"GET"</span>, <span class="pl-s">"POST"</span>, <span class="pl-s">"OPTIONS"</span>}        <span class="pl-c">// 允许的 HTTP 方法</span>
+	<span class="pl-s1">corsConfig</span>.<span class="pl-c1">AllowHeaders</span> <span class="pl-c1">=</span> []<span class="pl-smi">string</span>{<span class="pl-s">"Content-Type"</span>, <span class="pl-s">"Authorization"</span>} <span class="pl-c">// 允许的请求头</span>
+
+	<span class="pl-c">// 使用 gin 框架设置路由</span>
+	<span class="pl-s1">r</span> <span class="pl-c1">:=</span> <span class="pl-s1">gin</span>.<span class="pl-en">Default</span>()
+
+	<span class="pl-c">// 因为需要支付宝返回回调请求，是跨域的，所以需要处理跨域请求</span>
+	<span class="pl-c">// 将 CORS 中间件应用到所有路由</span>
+	<span class="pl-s1">r</span>.<span class="pl-en">Use</span>(<span class="pl-s1">cors</span>.<span class="pl-en">New</span>(<span class="pl-s1">corsConfig</span>))
+
+	<span class="pl-c">// 配置路由</span>
+	<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/alipay/pay"</span>, <span class="pl-s1">pay</span>)
+	<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/alipay/callback"</span>, <span class="pl-s1">callback</span>)
+	<span class="pl-s1">r</span>.<span class="pl-en">POST</span>(<span class="pl-s">"/alipay/notify"</span>, <span class="pl-s1">notify</span>)
+
+	<span class="pl-c">// 启动 HTTP 服务</span>
+	<span class="pl-s1">r</span>.<span class="pl-en">Run</span>(<span class="pl-s">":"</span> <span class="pl-c1">+</span> <span class="pl-s1">kServerPort</span>)
+}
+
+<span class="pl-k">func</span> <span class="pl-en">pay</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+	<span class="pl-k">var</span> <span class="pl-s1">tradeNo</span> <span class="pl-c1">=</span> <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"%d"</span>, <span class="pl-s1">xid</span>.<span class="pl-en">Next</span>())
+
+	<span class="pl-c">// 构造支付请求</span>
+	<span class="pl-k">var</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> alipay.<span class="pl-smi">TradePagePay</span>{}
+	<span class="pl-s1">p</span>.<span class="pl-c1">NotifyURL</span> <span class="pl-c1">=</span> <span class="pl-s1">kServerDomain</span> <span class="pl-c1">+</span> <span class="pl-s">"/alipay/notify"</span>
+	<span class="pl-s1">p</span>.<span class="pl-c1">ReturnURL</span> <span class="pl-c1">=</span> <span class="pl-s1">kServerDomain</span> <span class="pl-c1">+</span> <span class="pl-s">"/alipay/callback"</span>
+	<span class="pl-s1">p</span>.<span class="pl-c1">Subject</span> <span class="pl-c1">=</span> <span class="pl-s">"支付测试:"</span> <span class="pl-c1">+</span> <span class="pl-s1">tradeNo</span>
+	<span class="pl-s1">p</span>.<span class="pl-c1">OutTradeNo</span> <span class="pl-c1">=</span> <span class="pl-s1">tradeNo</span>
+	<span class="pl-s1">p</span>.<span class="pl-c1">TotalAmount</span> <span class="pl-c1">=</span> <span class="pl-s">"100.00"</span>
+	<span class="pl-s1">p</span>.<span class="pl-c1">ProductCode</span> <span class="pl-c1">=</span> <span class="pl-s">"FAST_INSTANT_TRADE_PAY"</span>
+
+	<span class="pl-c">// 打印支付请求数据</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付请求数据: %+v"</span>, <span class="pl-s1">p</span>)
+
+	<span class="pl-c">// 发起支付请求</span>
+	<span class="pl-s1">url</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">TradePagePay</span>(<span class="pl-s1">p</span>)
+
+	<span class="pl-c">// 打印生成的支付链接</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付链接: %s"</span>, <span class="pl-s1">url</span>.<span class="pl-en">String</span>())
+
+	<span class="pl-c">// 重定向到支付链接</span>
+	<span class="pl-s1">c</span>.<span class="pl-en">Redirect</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusTemporaryRedirect</span>, <span class="pl-s1">url</span>.<span class="pl-en">String</span>())
+}
+
+<span class="pl-k">func</span> <span class="pl-en">callback</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+	<span class="pl-c">// 解析请求参数</span>
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-en">ParseForm</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s">"解析表单数据失败"</span>,
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 打印回调的请求数据</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"回调请求数据: %+v"</span>, <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
+
+	<span class="pl-c">// 获取支付宝回调数据中的签名字段</span>
+	<span class="pl-s1">sign</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">DefaultQuery</span>(<span class="pl-s">"sign"</span>, <span class="pl-s">""</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">sign</span> <span class="pl-c1">==</span> <span class="pl-s">""</span> {
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s">"签名参数缺失"</span>,
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 验证签名</span>
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">VerifySign</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"回调签名验证失败"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s">"签名验证失败"</span>,
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"回调签名验证通过"</span>)
+
+	<span class="pl-c">// 获取回调中的订单信息</span>
+	<span class="pl-s1">outTradeNo</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">DefaultQuery</span>(<span class="pl-s">"out_trade_no"</span>, <span class="pl-s">""</span>)
+	<span class="pl-s1">totalAmount</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">DefaultQuery</span>(<span class="pl-s">"total_amount"</span>, <span class="pl-s">""</span>)
+	<span class="pl-c">//tradeNo := c.DefaultPostForm("trade_no", "")</span>
+
+	<span class="pl-c">// 验证支付金额</span>
+	<span class="pl-k">if</span> <span class="pl-s1">totalAmount</span> <span class="pl-c1">!=</span> <span class="pl-s">"100.00"</span> { <span class="pl-c">// 这里你可以根据自己的业务逻辑进行金额校验</span>
+		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付金额不匹配，expected: 100.00, received: %s"</span>, <span class="pl-s1">totalAmount</span>)
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s">"支付金额不匹配"</span>,
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 查询订单状态</span>
+	<span class="pl-k">var</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> alipay.<span class="pl-smi">TradeQuery</span>{}
+	<span class="pl-s1">p</span>.<span class="pl-c1">OutTradeNo</span> <span class="pl-c1">=</span> <span class="pl-s1">outTradeNo</span>
+
+	<span class="pl-c">// 调用支付宝查询接口</span>
+	<span class="pl-s1">rsp</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">TradeQuery</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s1">p</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"查询订单 %s 时发生错误: %s"</span>, <span class="pl-s1">outTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-en">Error</span>()),
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 打印查询结果</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付宝查询响应: %+v"</span>, <span class="pl-s1">rsp</span>)
+
+	<span class="pl-c">// 检查支付状态</span>
+	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-en">IsFailure</span>() {
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"支付查询失败: %s-%s"</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>),
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 如果支付成功，处理业务逻辑，如更新数据库、通知用户等</span>
+	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-c1">TradeStatus</span> <span class="pl-c1">==</span> <span class="pl-s">"TRADE_SUCCESS"</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"订单 %s 支付成功"</span>, <span class="pl-s1">outTradeNo</span>)
+		<span class="pl-c">// 这里可以写入支付成功后的业务逻辑，如更新订单状态、发货等</span>
+	} <span class="pl-k">else</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"订单 %s 支付失败"</span>, <span class="pl-s1">outTradeNo</span>)
+		<span class="pl-c">// 如果支付失败，可以进行相应的处理，如通知管理员等</span>
+	}
+
+	<span class="pl-c">// 返回成功响应</span>
+	<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, gin.<span class="pl-smi">H</span>{
+		<span class="pl-s">"message"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"订单 %s 支付成功"</span>, <span class="pl-s1">outTradeNo</span>),
+	})
+}
+
+<span class="pl-k">func</span> <span class="pl-en">notify</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+	<span class="pl-c">// 解析表单数据</span>
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-en">ParseForm</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s">"解析表单数据失败"</span>,
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 打印接收到的异步通知数据</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"异步通知请求数据: %+v"</span>, <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
+
+	<span class="pl-c">// 解析异步通知</span>
+	<span class="pl-s1">notification</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">DecodeNotification</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"解析异步通知发生错误"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s">"解析异步通知发生错误"</span>,
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 打印解析后的异步通知数据</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"解析后的异步通知数据: %+v"</span>, <span class="pl-s1">notification</span>)
+
+	<span class="pl-c">// 使用自定义请求进行查询</span>
+	<span class="pl-k">var</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-s1">alipay</span>.<span class="pl-en">NewPayload</span>(<span class="pl-s">"alipay.trade.query"</span>)
+	<span class="pl-s1">p</span>.<span class="pl-en">AddBizField</span>(<span class="pl-s">"out_trade_no"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>)
+
+	<span class="pl-c">// 查询订单信息</span>
+	<span class="pl-k">var</span> <span class="pl-s1">rsp</span> <span class="pl-c1">*</span>alipay.<span class="pl-smi">TradeQueryRsp</span>
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">Request</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s1">p</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">rsp</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-en">Error</span>())
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"验证订单 %s 信息发生错误: %s"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-en">Error</span>()),
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-c">// 打印支付宝的查询响应数据</span>
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付宝查询响应: %+v"</span>, <span class="pl-s1">rsp</span>)
+
+	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-en">IsFailure</span>() {
+		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s-%s <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>)
+		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s-%s"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>),
+		})
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"订单 %s 支付成功 <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>)
+
+	<span class="pl-c">// 确认通知成功</span>
+	<span class="pl-s1">client</span>.<span class="pl-en">ACKNotification</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Writer</span>)
+}</pre></div>
+<p>涉及了三个主要的请求方法，分别是：</p>
+<h4>1. <strong><code class="notranslate">pay</code> 请求方法</strong></h4>
+<ul>
+<li>
+<p><strong>作用：</strong> 这个方法是处理用户发起支付请求的地方。当用户请求 <code class="notranslate">GET /alipay/pay</code> 时，系统会生成一个支付链接，并将用户重定向到支付宝的支付页面。</p>
+</li>
+<li>
+<p><strong>具体步骤：</strong></p>
+<ol>
+<li>创建一个唯一的订单号（<code class="notranslate">tradeNo</code>），这里通过 <code class="notranslate">xid</code> 包生成一个。</li>
+<li>使用 <code class="notranslate">alipay.TradePagePay</code> 构建支付请求对象，设置支付相关的信息，如：通知地址（<code class="notranslate">NotifyURL</code>）、回调地址（<code class="notranslate">ReturnURL</code>）、商品描述（<code class="notranslate">Subject</code>）、订单号（<code class="notranslate">OutTradeNo</code>）和支付金额（<code class="notranslate">TotalAmount</code>）。</li>
+<li>调用 <code class="notranslate">client.TradePagePay(p)</code> 向支付宝请求生成支付页面链接。</li>
+<li>将生成的支付链接作为响应返回，并通过重定向将用户引导到支付宝的支付页面。</li>
+</ol>
+<p>该方法主要用于支付页面的生成和跳转，用户通过此链接进行支付操作。</p>
+</li>
+</ul>
+<h4>2. <strong><code class="notranslate">callback</code> 请求方法</strong></h4>
+<ul>
+<li>
+<p><strong>作用：</strong> 这个方法用于处理支付宝支付完成后的同步回调请求。当用户完成支付，支付宝会根据配置的 <code class="notranslate">ReturnURL</code> 返回到这个接口，并携带支付结果。</p>
+</li>
+<li>
+<p><strong>具体步骤：</strong></p>
+<ol>
+<li>从回调请求中解析支付宝返回的数据。</li>
+<li>获取回调中的签名参数，进行签名验证，确保回调数据未被篡改。</li>
+<li>验证支付金额是否与预期一致。</li>
+<li>使用支付宝的查询接口（<code class="notranslate">TradeQuery</code>）查询支付订单状态。</li>
+<li>如果支付成功，则执行相应的业务逻辑（如更新订单状态、发货等）。</li>
+<li>最终返回处理结果，如支付成功或失败的消息。</li>
+</ol>
+<p>这个方法的目的是处理支付完成后的验证和后续操作，确保支付数据的安全性与一致性。</p>
+</li>
+</ul>
+<h4>3. <strong><code class="notranslate">notify</code> 请求方法</strong></h4>
+<ul>
+<li>
+<p><strong>作用：</strong> 这个方法是处理支付宝支付后的异步通知请求。当用户支付完成后，支付宝会向 <code class="notranslate">NotifyURL</code> 发送异步通知，通知支付结果。支付宝会通过 POST 请求将支付结果发送到该接口。</p>
+</li>
+<li>
+<p><strong>具体步骤：</strong></p>
+<ol>
+<li>解析支付宝发送的异步通知数据。</li>
+<li>解码通知数据，得到支付结果。</li>
+<li>查询支付订单的最新状态，验证订单是否支付成功。</li>
+<li>确认支付成功后，可以进行进一步的处理，比如更新订单状态或进行其他业务逻辑。</li>
+<li>最后返回一个确认响应（<code class="notranslate">client.ACKNotification</code>），告诉支付宝已经收到并处理完通知。</li>
+</ol>
+<p>这个方法用于处理支付完成后的异步通知，它可以确保系统及时接收到支付宝的支付通知并执行相应的后续处理。</p>
+</li>
+</ul>
+<p>这三个请求方法分别用于：</p>
+<ul>
+<li><strong><code class="notranslate">pay</code></strong>：生成支付链接并跳转到支付宝支付页面。</li>
+<li><strong><code class="notranslate">callback</code></strong>：同步回调，处理支付完成后的回调请求。</li>
+<li><strong><code class="notranslate">notify</code></strong>：异步通知，处理支付宝发送的支付成功通知。</li>
+</ul>
+<h3>4. 测试</h3>
+<p>直接在浏览器中测试，我们输入<code class="notranslate">http://localhost:9989/alipay/pay</code>,将会重定向到支付宝支付页面<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b8072794-6b83-4794-a3ac-0308999d5e0e"><img src="https://github.com/user-attachments/assets/b8072794-6b83-4794-a3ac-0308999d5e0e" alt="image" style="max-width: 100%;"></a></p>
+<p>在沙箱控制台右边栏当中点击沙箱账号可以填入买家邮箱和支付密码模拟支付<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ec18aa98-aa16-4bc4-8010-3d349e4d213d"><img src="https://github.com/user-attachments/assets/ec18aa98-aa16-4bc4-8010-3d349e4d213d" alt="image" style="max-width: 100%;"></a></p>
+<p>也可以下载手机<a href="https://open.alipay.com/develop/sandbox/tool/alipayclint" rel="nofollow">支付宝沙箱版</a>,用沙箱账号登录后扫码支付</p>
+<p>我是使用手机扫码<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/779064f4-575b-4f40-8a3b-7e184551c9b4"><img src="https://github.com/user-attachments/assets/779064f4-575b-4f40-8a3b-7e184551c9b4" alt="image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/306692e9-837f-499d-8796-f0948b7cc416"><img width="1274" alt="c4fcdf494210ee0764b417b7025c3c6" src="https://github.com/user-attachments/assets/306692e9-837f-499d-8796-f0948b7cc416" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2d8aab05-2d61-448a-b5b8-e9624ffed0cf"><img width="1274" alt="29a02f0bd5940b065a67b5128971a1e" src="https://github.com/user-attachments/assets/2d8aab05-2d61-448a-b5b8-e9624ffed0cf" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3c8c0e94-e575-48d1-8252-f6de40829b6c"><img src="https://github.com/user-attachments/assets/3c8c0e94-e575-48d1-8252-f6de40829b6c" alt="image" style="max-width: 100%;"></a></p>
+<p>我们发现经过两次重定向后最后进入<code class="notranslate">http://localhost:9989/alipay/callback</code>显示支付成功</p>
+<p>第一次重定向后支付宝服务方会异步发送alipay/notify到自己的服务器</p>
+<p>第二次重定向会直接同步发送回调请求alipay/callback显示在用户界面通知支付成功</p>
+<h3>5. 查看gin控制台</h3>
+<pre class="notranslate"><code class="notranslate">2024/11/08 19:33:33 
+支付请求数据: 
+{Trade:{AuxParam:{} NotifyURL:http://localhost:9989/alipay/notify ReturnURL:http://localhost:9989/alipay/callback AppAuthToken: Subject:支付测试:3717435097532596224 Ou
+tTradeNo:3717435097532596224 TotalAmount:100.00 ProductCode:FAST_INSTANT_TRADE_PAY Body: GoodsDetail:[] BusinessParams:[] DisablePayChannels: EnablePayChannels: SpecifiedChannel: ExtendParams:&lt;nil&gt; Agr
+eementSignParams:&lt;nil&gt; GoodsType: InvoiceInfo: PassbackParams: PromoParams: RoyaltyInfo: SellerId: SettleInfo: StoreId: SubMerchant: TimeoutExpress: TimeExpire: MerchantOrderNo: ExtUserInfo:&lt;nil&gt; QueryOptions:[]} AuthToken: QRPayMode: QRCodeWidth:}
+2024/11/08 19:33:33 
+
+支付链接: https://openapi-sandbox.dl.alipaydev.com/gateway.do?alipay_root_cert_sn=687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6&amp;app_cert_sn=17811ce5cb5cf99a255aa
+c61c6a11ae8&amp;app_id=9021000141668546&amp;biz_content=pYwkNjCG66efEQCRHGGZCO%2B46LHmZe15cel6apDQiiKhmB%2Bt%2B79id%2Fli5No%2B4PC%2F0CckV20dSx%2Fr0mL5JDwysgCtvijdgWWyiPffxrfv0iLsSXMqC7VAOY0Mr9cA32uL01mEH39nE9I
+zTrcCjdJ9x1GN2tXhU57IFCy%2FbnSd3OfJcrLqJyKxxFlTtrjpdCCL1SBM1VxSo%2B9C8zL%2FlzfKDw%3D%3D&amp;charset=utf-8&amp;encrypt_type=AES&amp;format=JSON&amp;method=alipay.trade.page.pay&amp;notify_url=http%3A%2F%2Flocalhost%3A9989%
+2Falipay%2Fnotify&amp;return_url=http%3A%2F%2Flocalhost%3A9989%2Falipay%2Fcallback&amp;sign=buxn%2Fiwm3kBnCJbpIDi8Bz%2BYyJ1PFpYUR%2B%2Frh54aSzyDlyuMKlVHNO0AbSeAP5eyXXIK%2FbKJ8MMSETkfWEpDO%2Fuk4O4yzlBn0VMyZnoIT
+vRDIvUJYuCpKXgBXplfuVI6YEzA6S2S0l6%2BQuzIRpqHlK0VJoDahiWisr95YOxb8ld8oH37UO%2F%2BvbrHMYWT7BLTWz%2FVqh0ELMKX%2BhsAeGBM1HlNAe1gpk3CB4%2FTIH%2BGUbicv9TcTOV2nLLKCLkqmnqOlmhK%2FB%2BnbP52j7%2FbuGaV5hx%2FSnKeARdMZJW1tr3A7cWKyBpGOGf%2BylvBGvySg046aeRDo5l6OEnX3J10zdflUg%3D%3D&amp;sign_type=RSA2&amp;timestamp=2024-11-08+19%3A33%3A33&amp;version=1.0
+
+[GIN] 2024/11/08 - 19:33:33 | 307 |     31.9174ms |             ::1 | GET      "/alipay/pay"
+
+2024/11/08 19:34:09 
+回调请求数据: 
+map[app_id:[9021000141668546] auth_app_id:[9021000141668546] charset:[utf-8] method:[alipay.trade.page.pay.return] out_trade_no:[3717435097532596224] seller_id:[208872
+1048676520] sign:[R2vAtE5H22B5Z+rVvlvQBiokQWl84bH2E9peZDON1LEg82SXVS4F1FWIPDtifhI+CvUQ0Kj+oLHDuaoWMeAZhjRpwWQ+Q1htfDuFLcHPYN9ZSFWglw0dCmZ8cjPBy5Y0A5NcH2qAJQcCpKqtr6t9nFsk/U4PT4WW0i614AoLod7J94bqJwm0IhC
+pGxGCFyhlL8MnNXDRAg28Ne139n4O7GDNiw6PQtcmybGCmNW8YxEh1oP+tDj6+cATbxlwzeCmB4veowSS66JuAec3GqxLMFyXGOuLKUtrHAo6Uhth9pRKtVHVK8E5JLi97sB6N+hSX4h1qOBjybuvbRXao/RqjQ==] sign_type:[RSA2] timestamp:[2024-11-08 19:34:06] total_amount:[100.00] trade_no:[2024110822001476540504411933] version:[1.0]]
+
+2024/11/08 19:34:09 
+回调签名验证通过
+HYBAmount: BKAgentRespInfo:&lt;nil&gt; ChargeInfoList:[] DiscountGoodsDetail: VoucherDetailList:[]} rminalId: FundBillList:[] StoreName: BuyerUserId:2088722048676545 B
+2024/11/08 19:34:10 订单 3717435097532596224 支付成功
+
+[GIN] 2024/11/08 - 19:34:10 | 200 |    805.5153ms |             ::1 | GET      "/alipay/callback?charset=utf-8&amp;out_trade_no=3717435097532596224&amp;method=alipay.trade.page.pay.return&amp;total_amount=100.00&amp;sign=R2vAtE5H22B5Z%2BrVvlvQBiokQWl84bH2E9peZDON1LEg82SXVS4F1FWIPDtifhI%2BCvUQ0Kj%2BoLHDuaoWMeAZhjRpwWQ%2BQ1htfDuFLcHPYN9ZSFWglw0dCmZ8cjPBy5Y0A5NcH2qAJQcCpKqtr6t9nFsk%2FU4PT4WW0i614AoLod7J94bqJwm0IhCpGxGCFyhlL8MnNXDRAg28Ne139n4O7GDNiw6PQtcmybGCmNW8YxEh1oP%2BtDj6%2BcATbxlwzeCmB4veowSS66JuAec3GqxLMFyXGOuLKUtrHAo6Uhth9pRKtVHVK8E5JLi97sB6N%2BhSX4h1qOBjybuvbRXao%2FRqjQ%3D%3D&amp;trade_no=2024110822001476540504411933&amp;auth_app_id=9021000141668546&amp;version=1.0&amp;app_id=9021000141668546&amp;sign_type=RSA2&amp;seller_id=2088721048676520&amp;timestamp=2024-11-08+19%3A34%3A06" 19%3A34%3A06"
+
+</code></pre>
+<p>我们可以看到所有的参数<br>
+以及触发的请求</p>
+<p>但是，我们发现并没有接收到notify请求、使用为我们没有在控制台设置回调地址，并且也是处于本地网络环境，设置了也接收不到。<br>
+要想正确收取notify请求就需要在公网环境中部署。</p>
+<p>支付宝的沙箱环境支持模拟支付过程，因此可以避免涉及真实交易的风险。你可以在支付宝开放平台的沙箱环境中获取测试用的账户和支付信息。测试时，使用支付宝提供的沙箱账号来模拟支付。</p>
+<h2>总结</h2>
+<p>通过本篇学习笔记，我们成功地将支付宝支付集成到了Gin框架中，并在沙箱环境中模拟了支付流程。我们介绍了如何使用支付宝SDK创建支付订单，如何配置回调处理支付结果。集成支付宝支付是电商系统中重要的一部分，本篇笔记为后续功能扩展和真实支付接入打下了基础。接下来，我将继续深入研究其他支付方式的集成与优化，敬请期待。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://TMDOG666.github.io">TMDOG 的博客</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","TMDOG666/TMDOG666.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>

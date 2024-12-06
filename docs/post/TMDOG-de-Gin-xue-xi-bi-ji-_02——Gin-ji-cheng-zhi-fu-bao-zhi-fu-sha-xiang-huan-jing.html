@@ -161,58 +161,58 @@ Gin、支付宝SDK、Go</p>
 	<span class="pl-s1">kSecretKey</span> <span class="pl-c1">=</span> <span class="pl-s">"接口内容加密密钥"</span><span class="pl-c">// 内容加密密钥</span>
 )
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
 	<span class="pl-k">var</span> <span class="pl-s1">err</span> <span class="pl-smi">error</span>
 	
 	<span class="pl-c">// 初始化支付宝</span>
-	<span class="pl-k">if</span> <span class="pl-s1">client</span>, <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">alipay</span>.<span class="pl-en">New</span>(<span class="pl-s1">kAppId</span>, <span class="pl-s1">kPrivateKey</span>, <span class="pl-c1">false</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"初始化支付宝失败"</span>, <span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">client</span>, <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">alipay</span>.<span class="pl-c1">New</span>(<span class="pl-s1">kAppId</span>, <span class="pl-s1">kPrivateKey</span>, <span class="pl-c1">false</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"初始化支付宝失败"</span>, <span class="pl-s1">err</span>)
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 加载证书</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">LoadAppCertPublicKeyFromFile</span>(<span class="pl-s">"appPublicCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">LoadAppCertPublicKeyFromFile</span>(<span class="pl-s">"appPublicCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">LoadAliPayRootCertFromFile</span>(<span class="pl-s">"alipayRootCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">LoadAliPayRootCertFromFile</span>(<span class="pl-s">"alipayRootCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">LoadAlipayCertPublicKeyFromFile</span>(<span class="pl-s">"alipayPublicCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">LoadAlipayCertPublicKeyFromFile</span>(<span class="pl-s">"alipayPublicCert.crt"</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"加载证书发生错误"</span>, <span class="pl-s1">err</span>)
 		<span class="pl-k">return</span>
 	}
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">SetEncryptKey</span>(<span class="pl-s1">kSecretKey</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"加载内容加密密钥发生错误"</span>, <span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">SetEncryptKey</span>(<span class="pl-s1">kSecretKey</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"加载内容加密密钥发生错误"</span>, <span class="pl-s1">err</span>)
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 配置 CORS 中间件</span>
-	<span class="pl-s1">corsConfig</span> <span class="pl-c1">:=</span> <span class="pl-s1">cors</span>.<span class="pl-en">DefaultConfig</span>()
+	<span class="pl-s1">corsConfig</span> <span class="pl-c1">:=</span> <span class="pl-s1">cors</span>.<span class="pl-c1">DefaultConfig</span>()
 	<span class="pl-s1">corsConfig</span>.<span class="pl-c1">AllowAllOrigins</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span>                                   <span class="pl-c">// 允许所有域名</span>
 	<span class="pl-s1">corsConfig</span>.<span class="pl-c1">AllowMethods</span> <span class="pl-c1">=</span> []<span class="pl-smi">string</span>{<span class="pl-s">"GET"</span>, <span class="pl-s">"POST"</span>, <span class="pl-s">"OPTIONS"</span>}        <span class="pl-c">// 允许的 HTTP 方法</span>
 	<span class="pl-s1">corsConfig</span>.<span class="pl-c1">AllowHeaders</span> <span class="pl-c1">=</span> []<span class="pl-smi">string</span>{<span class="pl-s">"Content-Type"</span>, <span class="pl-s">"Authorization"</span>} <span class="pl-c">// 允许的请求头</span>
 
 	<span class="pl-c">// 使用 gin 框架设置路由</span>
-	<span class="pl-s1">r</span> <span class="pl-c1">:=</span> <span class="pl-s1">gin</span>.<span class="pl-en">Default</span>()
+	<span class="pl-s1">r</span> <span class="pl-c1">:=</span> <span class="pl-s1">gin</span>.<span class="pl-c1">Default</span>()
 
 	<span class="pl-c">// 因为需要支付宝返回回调请求，是跨域的，所以需要处理跨域请求</span>
 	<span class="pl-c">// 将 CORS 中间件应用到所有路由</span>
-	<span class="pl-s1">r</span>.<span class="pl-en">Use</span>(<span class="pl-s1">cors</span>.<span class="pl-en">New</span>(<span class="pl-s1">corsConfig</span>))
+	<span class="pl-s1">r</span>.<span class="pl-c1">Use</span>(<span class="pl-s1">cors</span>.<span class="pl-c1">New</span>(<span class="pl-s1">corsConfig</span>))
 
 	<span class="pl-c">// 配置路由</span>
-	<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/alipay/pay"</span>, <span class="pl-s1">pay</span>)
-	<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/alipay/callback"</span>, <span class="pl-s1">callback</span>)
-	<span class="pl-s1">r</span>.<span class="pl-en">POST</span>(<span class="pl-s">"/alipay/notify"</span>, <span class="pl-s1">notify</span>)
+	<span class="pl-s1">r</span>.<span class="pl-c1">GET</span>(<span class="pl-s">"/alipay/pay"</span>, <span class="pl-s1">pay</span>)
+	<span class="pl-s1">r</span>.<span class="pl-c1">GET</span>(<span class="pl-s">"/alipay/callback"</span>, <span class="pl-s1">callback</span>)
+	<span class="pl-s1">r</span>.<span class="pl-c1">POST</span>(<span class="pl-s">"/alipay/notify"</span>, <span class="pl-s1">notify</span>)
 
 	<span class="pl-c">// 启动 HTTP 服务</span>
-	<span class="pl-s1">r</span>.<span class="pl-en">Run</span>(<span class="pl-s">":"</span> <span class="pl-c1">+</span> <span class="pl-s1">kServerPort</span>)
+	<span class="pl-s1">r</span>.<span class="pl-c1">Run</span>(<span class="pl-s">":"</span> <span class="pl-c1">+</span> <span class="pl-s1">kServerPort</span>)
 }
 
-<span class="pl-k">func</span> <span class="pl-en">pay</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
-	<span class="pl-k">var</span> <span class="pl-s1">tradeNo</span> <span class="pl-c1">=</span> <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"%d"</span>, <span class="pl-s1">xid</span>.<span class="pl-en">Next</span>())
+<span class="pl-k">func</span> <span class="pl-s1">pay</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+	<span class="pl-k">var</span> <span class="pl-s1">tradeNo</span> <span class="pl-c1">=</span> <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"%d"</span>, <span class="pl-s1">xid</span>.<span class="pl-c1">Next</span>())
 
 	<span class="pl-c">// 构造支付请求</span>
 	<span class="pl-k">var</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> alipay.<span class="pl-smi">TradePagePay</span>{}
@@ -224,59 +224,59 @@ Gin、支付宝SDK、Go</p>
 	<span class="pl-s1">p</span>.<span class="pl-c1">ProductCode</span> <span class="pl-c1">=</span> <span class="pl-s">"FAST_INSTANT_TRADE_PAY"</span>
 
 	<span class="pl-c">// 打印支付请求数据</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付请求数据: %+v"</span>, <span class="pl-s1">p</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"支付请求数据: %+v"</span>, <span class="pl-s1">p</span>)
 
 	<span class="pl-c">// 发起支付请求</span>
-	<span class="pl-s1">url</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">TradePagePay</span>(<span class="pl-s1">p</span>)
+	<span class="pl-s1">url</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-c1">TradePagePay</span>(<span class="pl-s1">p</span>)
 
 	<span class="pl-c">// 打印生成的支付链接</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付链接: %s"</span>, <span class="pl-s1">url</span>.<span class="pl-en">String</span>())
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"支付链接: %s"</span>, <span class="pl-s1">url</span>.<span class="pl-c1">String</span>())
 
 	<span class="pl-c">// 重定向到支付链接</span>
-	<span class="pl-s1">c</span>.<span class="pl-en">Redirect</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusTemporaryRedirect</span>, <span class="pl-s1">url</span>.<span class="pl-en">String</span>())
+	<span class="pl-s1">c</span>.<span class="pl-c1">Redirect</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusTemporaryRedirect</span>, <span class="pl-s1">url</span>.<span class="pl-c1">String</span>())
 }
 
-<span class="pl-k">func</span> <span class="pl-en">callback</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+<span class="pl-k">func</span> <span class="pl-s1">callback</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
 	<span class="pl-c">// 解析请求参数</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-en">ParseForm</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">ParseForm</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"error"</span>: <span class="pl-s">"解析表单数据失败"</span>,
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 打印回调的请求数据</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"回调请求数据: %+v"</span>, <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"回调请求数据: %+v"</span>, <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
 
 	<span class="pl-c">// 获取支付宝回调数据中的签名字段</span>
-	<span class="pl-s1">sign</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">DefaultQuery</span>(<span class="pl-s">"sign"</span>, <span class="pl-s">""</span>)
+	<span class="pl-s1">sign</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">DefaultQuery</span>(<span class="pl-s">"sign"</span>, <span class="pl-s">""</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">sign</span> <span class="pl-c1">==</span> <span class="pl-s">""</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"error"</span>: <span class="pl-s">"签名参数缺失"</span>,
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 验证签名</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">VerifySign</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"回调签名验证失败"</span>, <span class="pl-s1">err</span>)
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-c1">VerifySign</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"回调签名验证失败"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"error"</span>: <span class="pl-s">"签名验证失败"</span>,
 		})
 		<span class="pl-k">return</span>
 	}
 
-	<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"回调签名验证通过"</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"回调签名验证通过"</span>)
 
 	<span class="pl-c">// 获取回调中的订单信息</span>
-	<span class="pl-s1">outTradeNo</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">DefaultQuery</span>(<span class="pl-s">"out_trade_no"</span>, <span class="pl-s">""</span>)
-	<span class="pl-s1">totalAmount</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">DefaultQuery</span>(<span class="pl-s">"total_amount"</span>, <span class="pl-s">""</span>)
+	<span class="pl-s1">outTradeNo</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">DefaultQuery</span>(<span class="pl-s">"out_trade_no"</span>, <span class="pl-s">""</span>)
+	<span class="pl-s1">totalAmount</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">DefaultQuery</span>(<span class="pl-s">"total_amount"</span>, <span class="pl-s">""</span>)
 	<span class="pl-c">//tradeNo := c.DefaultPostForm("trade_no", "")</span>
 
 	<span class="pl-c">// 验证支付金额</span>
 	<span class="pl-k">if</span> <span class="pl-s1">totalAmount</span> <span class="pl-c1">!=</span> <span class="pl-s">"100.00"</span> { <span class="pl-c">// 这里你可以根据自己的业务逻辑进行金额校验</span>
-		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付金额不匹配，expected: 100.00, received: %s"</span>, <span class="pl-s1">totalAmount</span>)
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+		<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"支付金额不匹配，expected: 100.00, received: %s"</span>, <span class="pl-s1">totalAmount</span>)
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"error"</span>: <span class="pl-s">"支付金额不匹配"</span>,
 		})
 		<span class="pl-k">return</span>
@@ -287,94 +287,94 @@ Gin、支付宝SDK、Go</p>
 	<span class="pl-s1">p</span>.<span class="pl-c1">OutTradeNo</span> <span class="pl-c1">=</span> <span class="pl-s1">outTradeNo</span>
 
 	<span class="pl-c">// 调用支付宝查询接口</span>
-	<span class="pl-s1">rsp</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">TradeQuery</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s1">p</span>)
+	<span class="pl-s1">rsp</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-c1">TradeQuery</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s1">p</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
-			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"查询订单 %s 时发生错误: %s"</span>, <span class="pl-s1">outTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-en">Error</span>()),
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"查询订单 %s 时发生错误: %s"</span>, <span class="pl-s1">outTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-c1">Error</span>()),
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 打印查询结果</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付宝查询响应: %+v"</span>, <span class="pl-s1">rsp</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"支付宝查询响应: %+v"</span>, <span class="pl-s1">rsp</span>)
 
 	<span class="pl-c">// 检查支付状态</span>
-	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-en">IsFailure</span>() {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
-			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"支付查询失败: %s-%s"</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>),
+	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-c1">IsFailure</span>() {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"支付查询失败: %s-%s"</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>),
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 如果支付成功，处理业务逻辑，如更新数据库、通知用户等</span>
 	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-c1">TradeStatus</span> <span class="pl-c1">==</span> <span class="pl-s">"TRADE_SUCCESS"</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"订单 %s 支付成功"</span>, <span class="pl-s1">outTradeNo</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"订单 %s 支付成功"</span>, <span class="pl-s1">outTradeNo</span>)
 		<span class="pl-c">// 这里可以写入支付成功后的业务逻辑，如更新订单状态、发货等</span>
 	} <span class="pl-k">else</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"订单 %s 支付失败"</span>, <span class="pl-s1">outTradeNo</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"订单 %s 支付失败"</span>, <span class="pl-s1">outTradeNo</span>)
 		<span class="pl-c">// 如果支付失败，可以进行相应的处理，如通知管理员等</span>
 	}
 
 	<span class="pl-c">// 返回成功响应</span>
-	<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, gin.<span class="pl-smi">H</span>{
-		<span class="pl-s">"message"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"订单 %s 支付成功"</span>, <span class="pl-s1">outTradeNo</span>),
+	<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, gin.<span class="pl-smi">H</span>{
+		<span class="pl-s">"message"</span>: <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"订单 %s 支付成功"</span>, <span class="pl-s1">outTradeNo</span>),
 	})
 }
 
-<span class="pl-k">func</span> <span class="pl-en">notify</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+<span class="pl-k">func</span> <span class="pl-s1">notify</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
 	<span class="pl-c">// 解析表单数据</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-en">ParseForm</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">ParseForm</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"error"</span>: <span class="pl-s">"解析表单数据失败"</span>,
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 打印接收到的异步通知数据</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"异步通知请求数据: %+v"</span>, <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"异步通知请求数据: %+v"</span>, <span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
 
 	<span class="pl-c">// 解析异步通知</span>
-	<span class="pl-s1">notification</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-en">DecodeNotification</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
+	<span class="pl-s1">notification</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">client</span>.<span class="pl-c1">DecodeNotification</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Request</span>.<span class="pl-c1">Form</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s">"解析异步通知发生错误"</span>, <span class="pl-s1">err</span>)
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"解析异步通知发生错误"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"error"</span>: <span class="pl-s">"解析异步通知发生错误"</span>,
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 打印解析后的异步通知数据</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"解析后的异步通知数据: %+v"</span>, <span class="pl-s1">notification</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"解析后的异步通知数据: %+v"</span>, <span class="pl-s1">notification</span>)
 
 	<span class="pl-c">// 使用自定义请求进行查询</span>
-	<span class="pl-k">var</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-s1">alipay</span>.<span class="pl-en">NewPayload</span>(<span class="pl-s">"alipay.trade.query"</span>)
-	<span class="pl-s1">p</span>.<span class="pl-en">AddBizField</span>(<span class="pl-s">"out_trade_no"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>)
+	<span class="pl-k">var</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-s1">alipay</span>.<span class="pl-c1">NewPayload</span>(<span class="pl-s">"alipay.trade.query"</span>)
+	<span class="pl-s1">p</span>.<span class="pl-c1">AddBizField</span>(<span class="pl-s">"out_trade_no"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>)
 
 	<span class="pl-c">// 查询订单信息</span>
 	<span class="pl-k">var</span> <span class="pl-s1">rsp</span> <span class="pl-c1">*</span>alipay.<span class="pl-smi">TradeQueryRsp</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-en">Request</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s1">p</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">rsp</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-en">Error</span>())
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
-			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"验证订单 %s 信息发生错误: %s"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-en">Error</span>()),
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">Request</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s1">p</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">rsp</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-c1">Error</span>())
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"验证订单 %s 信息发生错误: %s"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">err</span>.<span class="pl-c1">Error</span>()),
 		})
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-c">// 打印支付宝的查询响应数据</span>
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"支付宝查询响应: %+v"</span>, <span class="pl-s1">rsp</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"支付宝查询响应: %+v"</span>, <span class="pl-s1">rsp</span>)
 
-	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-en">IsFailure</span>() {
-		<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s-%s <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>)
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
-			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s-%s"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>),
+	<span class="pl-k">if</span> <span class="pl-s1">rsp</span>.<span class="pl-c1">IsFailure</span>() {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s-%s <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>)
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{
+			<span class="pl-s">"error"</span>: <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"异步通知验证订单 %s 信息发生错误: %s-%s"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">Msg</span>, <span class="pl-s1">rsp</span>.<span class="pl-c1">SubMsg</span>),
 		})
 		<span class="pl-k">return</span>
 	}
 
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"订单 %s 支付成功 <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"订单 %s 支付成功 <span class="pl-cce">\n</span>"</span>, <span class="pl-s1">notification</span>.<span class="pl-c1">OutTradeNo</span>)
 
 	<span class="pl-c">// 确认通知成功</span>
-	<span class="pl-s1">client</span>.<span class="pl-en">ACKNotification</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Writer</span>)
+	<span class="pl-s1">client</span>.<span class="pl-c1">ACKNotification</span>(<span class="pl-s1">c</span>.<span class="pl-c1">Writer</span>)
 }</pre></div>
 <p>涉及了三个主要的请求方法，分别是：</p>
 <h4>1. <strong><code class="notranslate">pay</code> 请求方法</strong></h4>

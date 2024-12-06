@@ -139,15 +139,15 @@ nest new service_2</pre></div>
 <h3>2.2 编码</h3>
 <h4>2.2.1 编写 <code class="notranslate">service_1</code></h4>
 <p>在 <code class="notranslate">service_1</code> 中，我们首先在 <code class="notranslate">main.ts</code> 中设置微服务的传输协议为 TCP，并定义其监听的端口为 3001：</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">MicroserviceOptions</span><span class="pl-kos">,</span> <span class="pl-smi">Transport</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">MicroserviceOptions</span><span class="pl-kos">,</span> <span class="pl-v">Transport</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
 
 <span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">NestFactory</span><span class="pl-kos">.</span><span class="pl-c1">createMicroservice</span><span class="pl-kos">&lt;</span><span class="pl-smi">MicroserviceOptions</span><span class="pl-kos">&gt;</span><span class="pl-kos">(</span>
-    <span class="pl-smi">AppModule</span><span class="pl-kos">,</span>
+  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-v">NestFactory</span><span class="pl-kos">.</span><span class="pl-c1">createMicroservice</span><span class="pl-c1">&lt;</span><span class="pl-smi">MicroserviceOptions</span><span class="pl-c1">&gt;</span><span class="pl-kos">(</span>
+    <span class="pl-v">AppModule</span><span class="pl-kos">,</span>
     <span class="pl-kos">{</span>
-      <span class="pl-c1">transport</span>: <span class="pl-smi">Transport</span><span class="pl-kos">.</span><span class="pl-c1">TCP</span><span class="pl-kos">,</span>
+      <span class="pl-c1">transport</span>: <span class="pl-v">Transport</span><span class="pl-kos">.</span><span class="pl-c1">TCP</span><span class="pl-kos">,</span>
       <span class="pl-c1">options</span>: <span class="pl-kos">{</span>
         <span class="pl-c1">host</span>: <span class="pl-s">'0.0.0.0'</span><span class="pl-kos">,</span>
         <span class="pl-c1">port</span>: <span class="pl-c1">3001</span><span class="pl-kos">,</span>
@@ -162,15 +162,15 @@ nest new service_2</pre></div>
 <li>与之前的单体架构项目不同的是我们创建的是微服务，并默认使用NestJS的<code class="notranslate">TCP</code>协议进行微服务之间的通信，并指定监听端口<code class="notranslate">3001</code></li>
 </ul>
 <p>接下来，我们在 <code class="notranslate">app.controller.ts</code> 中使用 <code class="notranslate">MessagePattern</code> 装饰器来处理从网关发来的消息：</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Controller</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">MessagePattern</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Controller</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">MessagePattern</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
 
-@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+@<span class="pl-v">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
 <span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
   <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">appService</span>: <span class="pl-smi">AppService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
 
-  @<span class="pl-smi">MessagePattern</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>
+  @<span class="pl-v">MessagePattern</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span>
   <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-s1">data</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
     <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">appService</span><span class="pl-kos">.</span><span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
   <span class="pl-kos">}</span>
@@ -180,9 +180,9 @@ nest new service_2</pre></div>
 <li>我们在<code class="notranslate">MessagePattern</code>修饰器中设置参数作为标识接收网关的消息，<code class="notranslate">{ cmd: 'get_hello' }</code>标识了该方法为<code class="notranslate">getHello</code></li>
 </ul>
 <p><code class="notranslate">app.service.ts</code> 提供了一个简单的服务方法：</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Injectable</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Injectable</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
 
-@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+@<span class="pl-v">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
 <span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppService</span> <span class="pl-kos">{</span>
   <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-s1">data</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
     <span class="pl-k">return</span> <span class="pl-s">`Hello World! This is service_1 from: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
@@ -191,45 +191,45 @@ nest new service_2</pre></div>
 <p><code class="notranslate">service_2</code> 的结构与 <code class="notranslate">service_1</code> 类似，但监听端口为 3002。</p>
 <h4>2.2.2 编写 <code class="notranslate">api-gateway</code></h4>
 <p><code class="notranslate">api-gateway</code> 作为微服务的入口，通过 <code class="notranslate">ClientsModule</code> 配置与 <code class="notranslate">service_1</code> 和 <code class="notranslate">service_2</code> 的通信：</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Module</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">ClientsModule</span><span class="pl-kos">,</span> <span class="pl-smi">Transport</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Module</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">ClientsModule</span><span class="pl-kos">,</span> <span class="pl-v">Transport</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
 
-@<span class="pl-smi">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+@<span class="pl-v">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
   <span class="pl-c1">imports</span>: <span class="pl-kos">[</span>
-    <span class="pl-smi">ClientsModule</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-kos">[</span>
+    <span class="pl-v">ClientsModule</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-kos">[</span>
       <span class="pl-kos">{</span>
         <span class="pl-c1">name</span>: <span class="pl-s">'SERVICE_1'</span><span class="pl-kos">,</span>
-        <span class="pl-c1">transport</span>: <span class="pl-smi">Transport</span><span class="pl-kos">.</span><span class="pl-c1">TCP</span><span class="pl-kos">,</span>
+        <span class="pl-c1">transport</span>: <span class="pl-v">Transport</span><span class="pl-kos">.</span><span class="pl-c1">TCP</span><span class="pl-kos">,</span>
         <span class="pl-c1">options</span>: <span class="pl-kos">{</span> <span class="pl-c1">host</span>: <span class="pl-s">'localhost'</span><span class="pl-kos">,</span> <span class="pl-c1">port</span>: <span class="pl-c1">3001</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
       <span class="pl-kos">}</span><span class="pl-kos">,</span>
       <span class="pl-kos">{</span>
         <span class="pl-c1">name</span>: <span class="pl-s">'SERVICE_2'</span><span class="pl-kos">,</span>
-        <span class="pl-c1">transport</span>: <span class="pl-smi">Transport</span><span class="pl-kos">.</span><span class="pl-c1">TCP</span><span class="pl-kos">,</span>
+        <span class="pl-c1">transport</span>: <span class="pl-v">Transport</span><span class="pl-kos">.</span><span class="pl-c1">TCP</span><span class="pl-kos">,</span>
         <span class="pl-c1">options</span>: <span class="pl-kos">{</span> <span class="pl-c1">host</span>: <span class="pl-s">'localhost'</span><span class="pl-kos">,</span> <span class="pl-c1">port</span>: <span class="pl-c1">3002</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
       <span class="pl-kos">}</span><span class="pl-kos">,</span>
     <span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
   <span class="pl-kos">]</span><span class="pl-kos">,</span>
-  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-smi">AppService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-v">AppController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-v">AppService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
 <span class="pl-kos">}</span><span class="pl-kos">)</span>
 <span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">{</span><span class="pl-kos">}</span></pre></div>
 <p><code class="notranslate">app.controller.ts</code> 中使用 <code class="notranslate">ClientProxy</code> 来与微服务通信：</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Controller</span><span class="pl-kos">,</span> <span class="pl-smi">Get</span><span class="pl-kos">,</span> <span class="pl-smi">Inject</span><span class="pl-kos">,</span> <span class="pl-smi">UseInterceptors</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">ClientProxy</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">LoggingInterceptor</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./common/interceptor/logger.interceptor'</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Controller</span><span class="pl-kos">,</span> <span class="pl-v">Get</span><span class="pl-kos">,</span> <span class="pl-v">Inject</span><span class="pl-kos">,</span> <span class="pl-v">UseInterceptors</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">ClientProxy</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/microservices'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">LoggingInterceptor</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./common/interceptor/logger.interceptor'</span><span class="pl-kos">;</span>
 
-@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-@<span class="pl-smi">UseInterceptors</span><span class="pl-kos">(</span><span class="pl-smi">LoggingInterceptor</span><span class="pl-kos">)</span>
+@<span class="pl-v">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+@<span class="pl-v">UseInterceptors</span><span class="pl-kos">(</span><span class="pl-v">LoggingInterceptor</span><span class="pl-kos">)</span>
 <span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
   <span class="pl-en">constructor</span><span class="pl-kos">(</span>
-    @<span class="pl-smi">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_1'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service1</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
-    @<span class="pl-smi">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_2'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service2</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
+    @<span class="pl-v">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_1'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service1</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
+    @<span class="pl-v">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_2'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service2</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
   <span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
 
-  @<span class="pl-smi">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-  <span class="pl-k">async</span> <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">Promise</span><span class="pl-kos">&lt;</span><span class="pl-smi">string</span><span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+  @<span class="pl-v">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-k">async</span> <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">Promise</span><span class="pl-c1">&lt;</span><span class="pl-smi">string</span><span class="pl-c1">&gt;</span> <span class="pl-kos">{</span>
     <span class="pl-k">const</span> <span class="pl-s1">service1Response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">service1</span><span class="pl-kos">.</span><span class="pl-en">send</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s">'API Gateway'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toPromise</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">const</span> <span class="pl-s1">service2Response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">service2</span><span class="pl-kos">.</span><span class="pl-en">send</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s">'API Gateway'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toPromise</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">return</span> <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">service1Response</span><span class="pl-kos">}</span></span>\n<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">service2Response</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
@@ -245,36 +245,36 @@ nest new service_2</pre></div>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/cb74aa38-3c15-4882-b647-6270f1a0b877"><img src="https://github.com/user-attachments/assets/cb74aa38-3c15-4882-b647-6270f1a0b877" alt="image" style="max-width: 100%;"></a></p>
 <h3>我们还可以在API网关中使用拦截器构建日志功能：</h3>
 <p>api-gateway中<code class="notranslate">src/common/interceptor</code>的logger.interceptor.ts文件下：</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Injectable</span><span class="pl-kos">,</span> <span class="pl-smi">NestInterceptor</span><span class="pl-kos">,</span> <span class="pl-smi">ExecutionContext</span><span class="pl-kos">,</span> <span class="pl-smi">CallHandler</span><span class="pl-kos">,</span> <span class="pl-smi">Logger</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-smi">Observable</span>  <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'rxjs'</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Injectable</span><span class="pl-kos">,</span> <span class="pl-v">NestInterceptor</span><span class="pl-kos">,</span> <span class="pl-v">ExecutionContext</span><span class="pl-kos">,</span> <span class="pl-v">CallHandler</span><span class="pl-kos">,</span> <span class="pl-v">Logger</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Observable</span>  <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'rxjs'</span><span class="pl-kos">;</span>
 <span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">tap</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'rxjs/operators'</span><span class="pl-kos">;</span>
 
-@<span class="pl-smi">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+@<span class="pl-v">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
 <span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">LoggingInterceptor</span> <span class="pl-k">implements</span> <span class="pl-smi">NestInterceptor</span> <span class="pl-kos">{</span>
-  <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-c1">logger</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-smi">Logger</span><span class="pl-kos">(</span><span class="pl-s">'HTTP'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-en">intercept</span><span class="pl-kos">(</span><span class="pl-s1">context</span>: <span class="pl-smi">ExecutionContext</span><span class="pl-kos">,</span> <span class="pl-s1">next</span>: <span class="pl-smi">CallHandler</span><span class="pl-kos">)</span>: <span class="pl-smi">Observable</span><span class="pl-kos">&lt;</span><span class="pl-smi">any</span><span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+  <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-c1">logger</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Logger</span><span class="pl-kos">(</span><span class="pl-s">'HTTP'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+  <span class="pl-en">intercept</span><span class="pl-kos">(</span><span class="pl-s1">context</span>: <span class="pl-smi">ExecutionContext</span><span class="pl-kos">,</span> <span class="pl-s1">next</span>: <span class="pl-smi">CallHandler</span><span class="pl-kos">)</span>: <span class="pl-smi">Observable</span><span class="pl-c1">&lt;</span><span class="pl-smi">any</span><span class="pl-c1">&gt;</span> <span class="pl-kos">{</span>
     <span class="pl-k">const</span> <span class="pl-s1">methodKey</span> <span class="pl-c1">=</span> <span class="pl-s1">context</span><span class="pl-kos">.</span><span class="pl-en">getHandler</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-c1">name</span><span class="pl-kos">;</span>
-    <span class="pl-k">const</span> <span class="pl-s1">now</span> <span class="pl-c1">=</span> <span class="pl-smi">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-s1">now</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">return</span> <span class="pl-s1">next</span>
       <span class="pl-kos">.</span><span class="pl-en">handle</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
       <span class="pl-kos">.</span><span class="pl-en">pipe</span><span class="pl-kos">(</span>
         <span class="pl-en">tap</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
-          <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">logger</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`method:<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">methodKey</span><span class="pl-kos">}</span></span>-耗时： <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-s1">now</span><span class="pl-kos">}</span></span>ms`</span><span class="pl-kos">)</span>
+          <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">logger</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`method:<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">methodKey</span><span class="pl-kos">}</span></span>-耗时： <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-s1">now</span><span class="pl-kos">}</span></span>ms`</span><span class="pl-kos">)</span>
         <span class="pl-kos">}</span><span class="pl-kos">)</span>
       <span class="pl-kos">)</span><span class="pl-kos">;</span>
   <span class="pl-kos">}</span>
 <span class="pl-kos">}</span></pre></div>
 <p>并在controller中使用</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate">@<span class="pl-smi">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-@<span class="pl-smi">UseInterceptors</span><span class="pl-kos">(</span><span class="pl-smi">LoggingInterceptor</span><span class="pl-kos">)</span><span class="pl-c">//使用</span>
+<div class="highlight highlight-source-ts"><pre class="notranslate">@<span class="pl-v">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+@<span class="pl-v">UseInterceptors</span><span class="pl-kos">(</span><span class="pl-v">LoggingInterceptor</span><span class="pl-kos">)</span><span class="pl-c">//使用</span>
 <span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
   <span class="pl-en">constructor</span><span class="pl-kos">(</span>
-    @<span class="pl-smi">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_1'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service1</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
-    @<span class="pl-smi">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_2'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service2</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
+    @<span class="pl-v">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_1'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service1</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
+    @<span class="pl-v">Inject</span><span class="pl-kos">(</span><span class="pl-s">'SERVICE_2'</span><span class="pl-kos">)</span> <span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">service2</span>: <span class="pl-smi">ClientProxy</span><span class="pl-kos">,</span>
   <span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
 
-  @<span class="pl-smi">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-  <span class="pl-k">async</span> <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">Promise</span><span class="pl-kos">&lt;</span><span class="pl-smi">string</span><span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+  @<span class="pl-v">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+  <span class="pl-k">async</span> <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">Promise</span><span class="pl-c1">&lt;</span><span class="pl-smi">string</span><span class="pl-c1">&gt;</span> <span class="pl-kos">{</span>
     <span class="pl-k">const</span> <span class="pl-s1">service1Response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">service1</span><span class="pl-kos">.</span><span class="pl-en">send</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s">'API Gateway'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toPromise</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">const</span> <span class="pl-s1">service2Response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">service2</span><span class="pl-kos">.</span><span class="pl-en">send</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s">'API Gateway'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toPromise</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">return</span> <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">service1Response</span><span class="pl-kos">}</span></span>\n<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">service2Response</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>

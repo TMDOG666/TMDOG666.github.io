@@ -113,19 +113,19 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-s">"github.com/gin-gonic/gin"</span>
 )
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
 	<span class="pl-c">// 创建一个默认的Gin路由</span>
-	<span class="pl-s1">r</span> <span class="pl-c1">:=</span> <span class="pl-s1">gin</span>.<span class="pl-en">Default</span>()
+	<span class="pl-s1">r</span> <span class="pl-c1">:=</span> <span class="pl-s1">gin</span>.<span class="pl-c1">Default</span>()
 
 	<span class="pl-c">// 设置一个简单的GET路由</span>
-	<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-c1">200</span>, gin.<span class="pl-smi">H</span>{
+	<span class="pl-s1">r</span>.<span class="pl-c1">GET</span>(<span class="pl-s">"/"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-c1">200</span>, gin.<span class="pl-smi">H</span>{
 			<span class="pl-s">"message"</span>: <span class="pl-s">"hello gin"</span>,
 		})
 	})
 
 	<span class="pl-c">// 启动服务器，监听在8080端口</span>
-	<span class="pl-s1">r</span>.<span class="pl-en">Run</span>(<span class="pl-s">":8080"</span>)
+	<span class="pl-s1">r</span>.<span class="pl-c1">Run</span>(<span class="pl-s">":8080"</span>)
 }</pre></div>
 <h3>3. 运行你的应用</h3>
 <p>在终端中，运行以下命令启动你的应用：</p>
@@ -149,73 +149,73 @@ go get gorm.io/driver/postgres</pre></div>
 
 <span class="pl-k">var</span> <span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>
 
-<span class="pl-k">func</span> <span class="pl-en">init</span>() {
+<span class="pl-k">func</span> <span class="pl-s1">init</span>() {
 	<span class="pl-c">// 数据库连接信息</span>
 	<span class="pl-s1">dsn</span> <span class="pl-c1">:=</span> <span class="pl-s">"host=localhost user=postgres password=123456 dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai"</span>
 	<span class="pl-k">var</span> <span class="pl-s1">err</span> <span class="pl-smi">error</span>
 	<span class="pl-c">// 连接数据库</span>
-	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">gorm</span>.<span class="pl-en">Open</span>(<span class="pl-s1">postgres</span>.<span class="pl-en">Open</span>(<span class="pl-s1">dsn</span>), <span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Config</span>{})
+	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">gorm</span>.<span class="pl-c1">Open</span>(<span class="pl-s1">postgres</span>.<span class="pl-c1">Open</span>(<span class="pl-s1">dsn</span>), <span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Config</span>{})
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-en">panic</span>(<span class="pl-s">"failed to connect to database"</span>)
+		<span class="pl-s1">panic</span>(<span class="pl-s">"failed to connect to database"</span>)
 	}
 	<span class="pl-c">// 自动迁移（将在数据库中创建表）</span>
-	<span class="pl-s1">db</span>.<span class="pl-en">AutoMigrate</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">User</span>{})
+	<span class="pl-s1">db</span>.<span class="pl-c1">AutoMigrate</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">User</span>{})
 }</pre></div>
 <h3>3. 编写接口</h3>
 <p>实现对用户表的增删改查接口：</p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-c">// 创建用户</span>
-<span class="pl-s1">r</span>.<span class="pl-en">POST</span>(<span class="pl-s">"/users"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+<span class="pl-s1">r</span>.<span class="pl-c1">POST</span>(<span class="pl-s">"/users"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
 	<span class="pl-k">var</span> <span class="pl-s1">user</span> <span class="pl-smi">User</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">ShouldBindJSON</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s1">err</span>.<span class="pl-en">Error</span>()})
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">ShouldBindJSON</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s1">err</span>.<span class="pl-c1">Error</span>()})
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-s1">db</span>.<span class="pl-en">Create</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>)
-	<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusCreated</span>, <span class="pl-s1">user</span>)
+	<span class="pl-s1">db</span>.<span class="pl-c1">Create</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>)
+	<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusCreated</span>, <span class="pl-s1">user</span>)
 })
 
 <span class="pl-c">// 获取所有用户</span>
-<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/users"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+<span class="pl-s1">r</span>.<span class="pl-c1">GET</span>(<span class="pl-s">"/users"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
 	<span class="pl-k">var</span> <span class="pl-s1">users</span> []<span class="pl-smi">User</span>
-	<span class="pl-s1">db</span>.<span class="pl-en">Find</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">users</span>)
-	<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, <span class="pl-s1">users</span>)
+	<span class="pl-s1">db</span>.<span class="pl-c1">Find</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">users</span>)
+	<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, <span class="pl-s1">users</span>)
 })
 
 <span class="pl-c">// 根据ID获取用户</span>
-<span class="pl-s1">r</span>.<span class="pl-en">GET</span>(<span class="pl-s">"/users/:id"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+<span class="pl-s1">r</span>.<span class="pl-c1">GET</span>(<span class="pl-s">"/users/:id"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
 	<span class="pl-k">var</span> <span class="pl-s1">user</span> <span class="pl-smi">User</span>
-	<span class="pl-s1">id</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">Param</span>(<span class="pl-s">"id"</span>)
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">First</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>, <span class="pl-s1">id</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNotFound</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s">"User not found"</span>})
+	<span class="pl-s1">id</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Param</span>(<span class="pl-s">"id"</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">First</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>, <span class="pl-s1">id</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNotFound</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s">"User not found"</span>})
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, <span class="pl-s1">user</span>)
+	<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, <span class="pl-s1">user</span>)
 })
 
 <span class="pl-c">// 更新用户</span>
-<span class="pl-s1">r</span>.<span class="pl-en">PUT</span>(<span class="pl-s">"/users/:id"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+<span class="pl-s1">r</span>.<span class="pl-c1">PUT</span>(<span class="pl-s">"/users/:id"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
 	<span class="pl-k">var</span> <span class="pl-s1">user</span> <span class="pl-smi">User</span>
-	<span class="pl-s1">id</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">Param</span>(<span class="pl-s">"id"</span>)
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">First</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>, <span class="pl-s1">id</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNotFound</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s">"User not found"</span>})
+	<span class="pl-s1">id</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Param</span>(<span class="pl-s">"id"</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">First</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>, <span class="pl-s1">id</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNotFound</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s">"User not found"</span>})
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">ShouldBindJSON</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s1">err</span>.<span class="pl-en">Error</span>()})
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">ShouldBindJSON</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusBadRequest</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s1">err</span>.<span class="pl-c1">Error</span>()})
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-s1">db</span>.<span class="pl-en">Save</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>)
-	<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, <span class="pl-s1">user</span>)
+	<span class="pl-s1">db</span>.<span class="pl-c1">Save</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>)
+	<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusOK</span>, <span class="pl-s1">user</span>)
 })
 
 <span class="pl-c">// 删除用户</span>
-<span class="pl-s1">r</span>.<span class="pl-en">DELETE</span>(<span class="pl-s">"/users/:id"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
-	<span class="pl-s1">id</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-en">Param</span>(<span class="pl-s">"id"</span>)
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Delete</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">User</span>{}, <span class="pl-s1">id</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">c</span>.<span class="pl-en">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNotFound</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s">"User not found"</span>})
+<span class="pl-s1">r</span>.<span class="pl-c1">DELETE</span>(<span class="pl-s">"/users/:id"</span>, <span class="pl-k">func</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
+	<span class="pl-s1">id</span> <span class="pl-c1">:=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Param</span>(<span class="pl-s">"id"</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Delete</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">User</span>{}, <span class="pl-s1">id</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">c</span>.<span class="pl-c1">JSON</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNotFound</span>, gin.<span class="pl-smi">H</span>{<span class="pl-s">"error"</span>: <span class="pl-s">"User not found"</span>})
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-s1">c</span>.<span class="pl-en">Status</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNoContent</span>)
+	<span class="pl-s1">c</span>.<span class="pl-c1">Status</span>(<span class="pl-s1">http</span>.<span class="pl-c1">StatusNoContent</span>)
 })</pre></div>
 <h3>4. 测试</h3>
 <p>使用Postman或curl测试API：</p>

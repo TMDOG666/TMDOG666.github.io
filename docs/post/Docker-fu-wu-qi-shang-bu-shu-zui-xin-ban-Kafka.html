@@ -186,7 +186,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h3>创建docker-compose.yaml文件</h3>
 <p>在你自己的目录下创建一个名为<code class="notranslate">docker-compose.yaml</code>的文件，并添加以下内容：<br>
 我是在root目录下创建了kafka_config文件夹<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7"><img src="https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7" alt="image" style="max-width: 100%;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7"><img src="https://github.com/user-attachments/assets/08c20808-60b2-44a8-b3c6-175b74d0e1f7" alt="image" style="max-width: 100%; height: auto;"></a></p>
 <p>在docker-compose.yaml下：</p>
 <div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>
 <span class="pl-ent">services</span>:
@@ -247,12 +247,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>在运行docker-compose的目录下，运行以下命令启动Kafka服务：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker-compose up -d</pre></div>
 <p>结果如下：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9bcd046f-f75c-4dce-bdee-029e13a39486"><img src="https://github.com/user-attachments/assets/9bcd046f-f75c-4dce-bdee-029e13a39486" alt="image" style="max-width: 100%;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9bcd046f-f75c-4dce-bdee-029e13a39486"><img src="https://github.com/user-attachments/assets/9bcd046f-f75c-4dce-bdee-029e13a39486" alt="image" style="max-width: 100%; height: auto;"></a></p>
 <h3>测试部署</h3>
 <p>确认Kafka服务是否已成功运行，可以使用以下命令检查容器状态：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker ps</pre></div>
 <p>结果如下：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0c6e6de2-df26-4aa2-908b-f65231be3a8b"><img src="https://github.com/user-attachments/assets/0c6e6de2-df26-4aa2-908b-f65231be3a8b" alt="image" style="max-width: 100%;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0c6e6de2-df26-4aa2-908b-f65231be3a8b"><img src="https://github.com/user-attachments/assets/0c6e6de2-df26-4aa2-908b-f65231be3a8b" alt="image" style="max-width: 100%; height: auto;"></a></p>
 <p>如果Kafka容器正在运行，你将看到<code class="notranslate">bitnami/kafka:latest</code>镜像的容器在列表中。</p>
 <p>你还可以使用Kafka命令行工具或Kafka客户端测试Kafka服务，例如使用Kafka自带的生产者和消费者工具发送和接收消息。</p>
 <hr>

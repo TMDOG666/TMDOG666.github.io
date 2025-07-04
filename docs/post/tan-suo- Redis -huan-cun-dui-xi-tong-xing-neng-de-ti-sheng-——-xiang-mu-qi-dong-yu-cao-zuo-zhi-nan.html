@@ -102,7 +102,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li>打开终端，进入项目目录。</li>
 </ul>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/51aab32a-540b-4809-9b4d-8aff5326115d"><img src="https://github.com/user-attachments/assets/51aab32a-540b-4809-9b4d-8aff5326115d" alt="Image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/51aab32a-540b-4809-9b4d-8aff5326115d"><img src="https://github.com/user-attachments/assets/51aab32a-540b-4809-9b4d-8aff5326115d" alt="Image" style="max-width: 100%; height: auto;"></a></p>
 <ul>
 <li>执行以下命令启动项目：</li>
 </ul>
@@ -110,7 +110,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>这个命令会构建项目所需的 Docker 镜像，并在后台启动 MySQL、Redis 和应用服务。<code class="notranslate">--build</code> 选项会确保重新构建镜像，以包含最新的代码更改。</p>
 <h5>3. 验证项目启动</h5>
 <p>等待一段时间后，打开浏览器访问 <code class="notranslate">http://localhost:8080</code>，如果看到“数据库与系统监控仪表盘”页面，说明项目已经成功启动。</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bb4f50f6-c0d8-457f-ab9f-b531bbc292ca"><img src="https://github.com/user-attachments/assets/bb4f50f6-c0d8-457f-ab9f-b531bbc292ca" alt="Image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bb4f50f6-c0d8-457f-ab9f-b531bbc292ca"><img src="https://github.com/user-attachments/assets/bb4f50f6-c0d8-457f-ab9f-b531bbc292ca" alt="Image" style="max-width: 100%; height: auto;"></a></p>
 <h4>三、核心代码描述</h4>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-c">// 用户信息处理函数</span>
 <span class="pl-k">func</span> <span class="pl-s1">getUserHandler</span>(<span class="pl-s1">c</span> <span class="pl-c1">*</span>gin.<span class="pl-smi">Context</span>) {
@@ -198,10 +198,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h4>四、项目操作指南</h4>
 <h5>1. 系统监控</h5>
 <p>打开浏览器访问 <code class="notranslate">http://localhost:8080</code>，你会看到系统监控仪表盘。仪表盘会显示 Redis 和 MySQL 的状态、缓存命中率、数据库连接数等信息。你可以通过选择不同的刷新间隔，或者点击“刷新数据”按钮来更新页面数据。</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bfdf682d-17e6-4120-a521-e79315342a6b"><img src="https://github.com/user-attachments/assets/bfdf682d-17e6-4120-a521-e79315342a6b" alt="Image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bfdf682d-17e6-4120-a521-e79315342a6b"><img src="https://github.com/user-attachments/assets/bfdf682d-17e6-4120-a521-e79315342a6b" alt="Image" style="max-width: 100%; height: auto;"></a></p>
 <h5>2. 压力测试</h5>
 <p>在仪表盘的“压力测试”部分，你可以进行压力测试。输入测试的持续时间、并发数和测试端点，然后点击“开始测试”按钮，系统会开始进行压力测试。在测试过程中，你可以点击“停止测试”按钮来停止测试。测试结束后，系统会显示测试结果，包括总请求数、成功请求数、平均响应时间等指标。</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/efc006c5-13e4-455f-b5b0-2005c45327a9"><img src="https://github.com/user-attachments/assets/efc006c5-13e4-455f-b5b0-2005c45327a9" alt="Image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/efc006c5-13e4-455f-b5b0-2005c45327a9"><img src="https://github.com/user-attachments/assets/efc006c5-13e4-455f-b5b0-2005c45327a9" alt="Image" style="max-width: 100%; height: auto;"></a></p>
 <p>我们发现30s的测试每秒请求次数达到了16212次，性能非常强悍。</p>
 <p>我们直接修改代码</p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-c">// 用户信息处理函数</span>
@@ -252,7 +252,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>注释掉redis相关逻辑</p>
 <p>重新部署，先关闭卸载容器<code class="notranslate">docker-compose down -v </code>，重新构建<code class="notranslate">docker-compose up -d --build</code></p>
 <p>进入仪表盘并测试</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1fcb06f5-f299-432a-8eca-e769e5a9c1f2"><img src="https://github.com/user-attachments/assets/1fcb06f5-f299-432a-8eca-e769e5a9c1f2" alt="Image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1fcb06f5-f299-432a-8eca-e769e5a9c1f2"><img src="https://github.com/user-attachments/assets/1fcb06f5-f299-432a-8eca-e769e5a9c1f2" alt="Image" style="max-width: 100%; height: auto;"></a></p>
 <p>发现30s测试只能请求27407次，性能大幅降低</p>
 <h4>五、总结</h4>
 <p>通过启动和操作这个项目，我们可以直观地看到 Redis 缓存对系统性能的提升作用。在后续的博客中，我们将深入分析项目的代码，探讨 Redis 缓存的实现原理和优化策略。</p></div>

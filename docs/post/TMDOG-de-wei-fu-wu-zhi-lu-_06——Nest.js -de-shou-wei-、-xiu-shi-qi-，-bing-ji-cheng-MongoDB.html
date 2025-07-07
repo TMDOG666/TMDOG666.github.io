@@ -413,20 +413,20 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h3>这样我们就使用了自定义的修饰器与守卫对请求路由的保护</h3>
 <h2>测试与总结</h2>
 <h4>1.证错误的角色信息</h4>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/48d7cbce-6ea4-4d90-bce6-39ba975b22f1"><img src="https://github.com/user-attachments/assets/48d7cbce-6ea4-4d90-bce6-39ba975b22f1" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/48d7cbce-6ea4-4d90-bce6-39ba975b22f1"><img src="https://github.com/user-attachments/assets/48d7cbce-6ea4-4d90-bce6-39ba975b22f1" alt="image" style="max-width: 100%;"></a></p>
 <p>我们看到响应错误：<code class="notranslate">User validation failed: role: </code>admin1<code class="notranslate">is not a valid enum value for path</code>role<code class="notranslate">.</code></p>
 <h4>2.正常注册</h4>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c7f98210-a91c-476f-a32a-c1cff699a5a9"><img src="https://github.com/user-attachments/assets/c7f98210-a91c-476f-a32a-c1cff699a5a9" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c7f98210-a91c-476f-a32a-c1cff699a5a9"><img src="https://github.com/user-attachments/assets/c7f98210-a91c-476f-a32a-c1cff699a5a9" alt="image" style="max-width: 100%;"></a></p>
 <h4>3.登录</h4>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88b365f3-8122-4629-a53e-405f5519c16b"><img src="https://github.com/user-attachments/assets/88b365f3-8122-4629-a53e-405f5519c16b" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88b365f3-8122-4629-a53e-405f5519c16b"><img src="https://github.com/user-attachments/assets/88b365f3-8122-4629-a53e-405f5519c16b" alt="image" style="max-width: 100%;"></a></p>
 <h4>4.使用获得的jwt token 进行进一步操作</h4>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a8fc019d-d9a4-4b21-a0d4-67fb3b58f5a1"><img src="https://github.com/user-attachments/assets/a8fc019d-d9a4-4b21-a0d4-67fb3b58f5a1" alt="image" style="max-width: 100%; height: auto;"></a></p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a216097f-4b6f-47a9-8a6f-7d8cf420f20e"><img src="https://github.com/user-attachments/assets/a216097f-4b6f-47a9-8a6f-7d8cf420f20e" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a8fc019d-d9a4-4b21-a0d4-67fb3b58f5a1"><img src="https://github.com/user-attachments/assets/a8fc019d-d9a4-4b21-a0d4-67fb3b58f5a1" alt="image" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a216097f-4b6f-47a9-8a6f-7d8cf420f20e"><img src="https://github.com/user-attachments/assets/a216097f-4b6f-47a9-8a6f-7d8cf420f20e" alt="image" style="max-width: 100%;"></a></p>
 <h4>5.切换角色</h4>
 <p>获得所有用户信息的只有<code class="notranslate">admin</code>才可以访问，我们重新注册一个<code class="notranslate">user</code>的角色<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/28ce849d-f2d7-47e4-8334-7c860f9d91d3"><img src="https://github.com/user-attachments/assets/28ce849d-f2d7-47e4-8334-7c860f9d91d3" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/28ce849d-f2d7-47e4-8334-7c860f9d91d3"><img src="https://github.com/user-attachments/assets/28ce849d-f2d7-47e4-8334-7c860f9d91d3" alt="image" style="max-width: 100%;"></a><br>
 登陆后使用jwt token进行获得所有用户信息的操作报错：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3e3ca205-05f6-4d49-8378-d599bb3c91d6"><img src="https://github.com/user-attachments/assets/3e3ca205-05f6-4d49-8378-d599bb3c91d6" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3e3ca205-05f6-4d49-8378-d599bb3c91d6"><img src="https://github.com/user-attachments/assets/3e3ca205-05f6-4d49-8378-d599bb3c91d6" alt="image" style="max-width: 100%;"></a></p>
 <h2>结论</h2>
 <p>在本篇博客中，我们学习了如何使用 Nest.js 的守卫和修饰器进行权限管理，并将 MongoDB 集成到项目中进行数据持久化。通过这些工具，我们能够有效地管理用户权限，确保应用的安全性。在下一篇博客中，我们将继续探讨 Nest.js 的更多高级功能，敬请期待。</p>
 <p>如果各位技术大佬有任何问题或建议，欢迎在评论区留言。</p>

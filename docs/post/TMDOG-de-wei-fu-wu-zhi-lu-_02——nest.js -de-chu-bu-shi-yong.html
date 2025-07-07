@@ -223,7 +223,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">constructor(private readonly userService: UsersService) { }</code> 是控制器类的构造函数。在这里，我们可以初始化注册的服务实例（如 <code class="notranslate">UsersService</code>），这些服务实例由 Nest 的 IoC 容器自动注入，从而实现依赖注入。</li>
 <li><code class="notranslate">@Get() 、@Post('register')</code> 我们定义了具体的请求处理的方法，处理具体的HTTP请求，同样<code class="notranslate">@Post('register')</code>进一步截取到 <code class="notranslate">"/users/register"</code> 路径的请求。</li>
 <li><code class="notranslate">@Req()</code>定义了请求体，Nest 提供对底层平台的请求对象的访问（默认为 Express）。我们可以通过指示 Nest 通过在处理者的签名中添加装饰器来注入它来访问请求对象。我们还可以通过不同的注解获取自己想要的请求对象，以下是官方文档中的内容：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b19e30dc-9e93-4c48-8c92-106d506db281"><img src="https://github.com/user-attachments/assets/b19e30dc-9e93-4c48-8c92-106d506db281" alt="image" style="max-width: 100%; height: auto;"></a></li>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b19e30dc-9e93-4c48-8c92-106d506db281"><img src="https://github.com/user-attachments/assets/b19e30dc-9e93-4c48-8c92-106d506db281" alt="image" style="max-width: 100%;"></a></li>
 </ul>
 <h3>5. 模块 (<code class="notranslate">app.module.ts</code>)</h3>
 <p>最后，我们定义根模块 <code class="notranslate">AppModule</code>。</p>
@@ -253,7 +253,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>预期响应</strong>：</p>
 <div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
 <p><strong>实际响应</strong>：</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465"><img src="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465"><img src="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465" alt="image" style="max-width: 100%;"></a></p>
 <h4>2. 测试用户登录 (<code class="notranslate">/users/login</code>)</h4>
 <p><strong>请求类型</strong>：POST</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/login</code></p>
@@ -265,7 +265,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>预期响应</strong>：</p>
 <div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
 <p><strong>实际响应</strong>：</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab"><img src="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab"><img src="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab" alt="image" style="max-width: 100%;"></a></p>
 <h4>3. 测试修改密码 (<code class="notranslate">/users/:username</code>)</h4>
 <p><strong>请求类型</strong>：PUT</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/tmdog</code></p>
@@ -276,14 +276,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>预期响应</strong>：</p>
 <div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
 <p><strong>实际响应</strong>：</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a"><img src="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a"><img src="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a" alt="image" style="max-width: 100%;"></a></p>
 <h4>4. 测试删除用户 (<code class="notranslate">/users/:username</code>)</h4>
 <p><strong>请求类型</strong>：DELETE</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/tmdog</code></p>
 <p><strong>预期响应</strong>：</p>
 <div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
 <p><strong>实际响应</strong>：</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886"><img src="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886"><img src="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886" alt="image" style="max-width: 100%;"></a></p>
 <h4>5. 测试获取所有用户 (<code class="notranslate">/users</code>)</h4>
 <p>我们先添加几个用户</p>
 <p><strong>请求类型</strong>：GET</p>
@@ -304,7 +304,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     }
 ]</pre></div>
 <p><strong>实际响应</strong>：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0"><img src="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0"><img src="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0" alt="image" style="max-width: 100%;"></a></p>
 <p>我们就完成了接口的初步测试，这是一个简单的示例，我们并没有给出一个标准统一的响应，所以结果略为简陋</p>
 <h2>结论</h2>
 <p>在这篇博客中，我们展示了如何在 Nest.js 中使用控制器来处理各种 HTTP 请求。我们创建了一个简单的用户管理服务，涵盖了用户的注册、登录、更改密码、删除用户和获取所有用户等操作。</p>

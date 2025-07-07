@@ -108,7 +108,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h2>2. NestJS 微服务快速入门</h2>
 <p>我们以一个简单的微服务架构作为示例</p>
 <p>我们将会构建三个模块如图：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/954f57fe-3a57-41e0-b3db-a1ce4f6824e6"><img src="https://github.com/user-attachments/assets/954f57fe-3a57-41e0-b3db-a1ce4f6824e6" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/954f57fe-3a57-41e0-b3db-a1ce4f6824e6"><img src="https://github.com/user-attachments/assets/954f57fe-3a57-41e0-b3db-a1ce4f6824e6" alt="image" style="max-width: 100%;"></a></p>
 <ul>
 <li><code class="notranslate">api-gateway</code> API Gateway 是整个微服务架构中的入口点。它主要负责接收来自客户端的请求，并将请求分发到对应的微服务。它也可以进行身份验证、请求转发、聚合数据等操作。</li>
 <li><code class="notranslate">service_1</code> 和 <code class="notranslate">service_2</code> 是独立的微服务，它们各自负责特定的业务逻辑。这些微服务通常根据业务需求进行拆分，每个服务专注于处理一个功能或模块。</li>
@@ -240,9 +240,9 @@ nest new service_2</pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">npm run start</pre></div>
 <p>完成编码后，我们可以分别运行 <code class="notranslate">service_1</code>、<code class="notranslate">service_2</code> 和 <code class="notranslate">api-gateway</code>，并通过浏览器或 Postman 访问 <code class="notranslate">http://localhost:3000</code>、 <code class="notranslate">http://localhost:3000/service1</code>、 <code class="notranslate">http://localhost:3000/service2</code>，测试微服务之间的通信是否正常。</p>
 <p>运行截图：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7df51aaf-f9fa-4290-a6a1-ff20cccc1a74"><img src="https://github.com/user-attachments/assets/7df51aaf-f9fa-4290-a6a1-ff20cccc1a74" alt="image" style="max-width: 100%; height: auto;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4902428f-4d1a-4a09-bef8-733d75e1f7ec"><img src="https://github.com/user-attachments/assets/4902428f-4d1a-4a09-bef8-733d75e1f7ec" alt="image" style="max-width: 100%; height: auto;"></a><br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/cb74aa38-3c15-4882-b647-6270f1a0b877"><img src="https://github.com/user-attachments/assets/cb74aa38-3c15-4882-b647-6270f1a0b877" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7df51aaf-f9fa-4290-a6a1-ff20cccc1a74"><img src="https://github.com/user-attachments/assets/7df51aaf-f9fa-4290-a6a1-ff20cccc1a74" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4902428f-4d1a-4a09-bef8-733d75e1f7ec"><img src="https://github.com/user-attachments/assets/4902428f-4d1a-4a09-bef8-733d75e1f7ec" alt="image" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/cb74aa38-3c15-4882-b647-6270f1a0b877"><img src="https://github.com/user-attachments/assets/cb74aa38-3c15-4882-b647-6270f1a0b877" alt="image" style="max-width: 100%;"></a></p>
 <h3>我们还可以在API网关中使用拦截器构建日志功能：</h3>
 <p>api-gateway中<code class="notranslate">src/common/interceptor</code>的logger.interceptor.ts文件下：</p>
 <div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Injectable</span><span class="pl-kos">,</span> <span class="pl-v">NestInterceptor</span><span class="pl-kos">,</span> <span class="pl-v">ExecutionContext</span><span class="pl-kos">,</span> <span class="pl-v">CallHandler</span><span class="pl-kos">,</span> <span class="pl-v">Logger</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
@@ -279,7 +279,7 @@ nest new service_2</pre></div>
     <span class="pl-k">const</span> <span class="pl-s1">service2Response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">service2</span><span class="pl-kos">.</span><span class="pl-en">send</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">cmd</span>: <span class="pl-s">'get_hello'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s">'API Gateway'</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toPromise</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">return</span> <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">service1Response</span><span class="pl-kos">}</span></span>\n<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">service2Response</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
   <span class="pl-kos">}</span><span class="pl-kos"></span></pre></div>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b54cc41c-90b7-440a-a26f-514791628c18"><img src="https://github.com/user-attachments/assets/b54cc41c-90b7-440a-a26f-514791628c18" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b54cc41c-90b7-440a-a26f-514791628c18"><img src="https://github.com/user-attachments/assets/b54cc41c-90b7-440a-a26f-514791628c18" alt="image" style="max-width: 100%;"></a></p>
 <h2>结论</h2>
 <p>在本篇博客中，我们初步探讨了微服务架构，并且使用 NestJS 快速创建微服务应用的示例。相信我们对微服务架构有了初步的了解。在下一篇博客中，我们将继续探讨更多高级的微服务架构实践，敬请期待。</p>
 <p>如有任何问题或建议，欢迎在评论区留言。</p>

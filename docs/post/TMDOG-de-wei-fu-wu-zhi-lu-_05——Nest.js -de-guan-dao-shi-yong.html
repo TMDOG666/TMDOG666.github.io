@@ -110,10 +110,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <h3>2. 测试效果</h3>
 <p>正常请求：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/178d4ea7-3595-4cbd-a34c-7e19fe0991e8"><img src="https://github.com/user-attachments/assets/178d4ea7-3595-4cbd-a34c-7e19fe0991e8" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/178d4ea7-3595-4cbd-a34c-7e19fe0991e8"><img src="https://github.com/user-attachments/assets/178d4ea7-3595-4cbd-a34c-7e19fe0991e8" alt="image" style="max-width: 100%;"></a><br>
 我们发现成功响应了请求param的值还有值的类型</p>
 <p>异常请求：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9346a23a-3be9-48ed-8ec4-2d819955bc72"><img src="https://github.com/user-attachments/assets/9346a23a-3be9-48ed-8ec4-2d819955bc72" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9346a23a-3be9-48ed-8ec4-2d819955bc72"><img src="https://github.com/user-attachments/assets/9346a23a-3be9-48ed-8ec4-2d819955bc72" alt="image" style="max-width: 100%;"></a><br>
 我们换成<code class="notranslate">abc</code>后发生报错，值的类型不匹配</p>
 <p>目前我们就简单使用了管道帮我们进行数据验证<br>
 Nest 配有九个开箱即用的管道：</p>
@@ -242,11 +242,11 @@ Nest 配有九个开箱即用的管道：</p>
 <span class="pl-kos">}</span></pre></div>
 <h3>5. 测试效果</h3>
 <p>注册：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/78e787b4-9644-402f-8eb4-218b2ff7ae41"><img src="https://github.com/user-attachments/assets/78e787b4-9644-402f-8eb4-218b2ff7ae41" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/78e787b4-9644-402f-8eb4-218b2ff7ae41"><img src="https://github.com/user-attachments/assets/78e787b4-9644-402f-8eb4-218b2ff7ae41" alt="image" style="max-width: 100%;"></a><br>
 正常登录：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e8a515ce-ddc0-4216-b0c0-c8df269daa1e"><img src="https://github.com/user-attachments/assets/e8a515ce-ddc0-4216-b0c0-c8df269daa1e" alt="image" style="max-width: 100%; height: auto;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e8a515ce-ddc0-4216-b0c0-c8df269daa1e"><img src="https://github.com/user-attachments/assets/e8a515ce-ddc0-4216-b0c0-c8df269daa1e" alt="image" style="max-width: 100%;"></a><br>
 异常登录：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/98e1e956-8465-43b4-8859-c85231489670"><img src="https://github.com/user-attachments/assets/98e1e956-8465-43b4-8859-c85231489670" alt="image" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/98e1e956-8465-43b4-8859-c85231489670"><img src="https://github.com/user-attachments/assets/98e1e956-8465-43b4-8859-c85231489670" alt="image" style="max-width: 100%;"></a></p>
 <p>当我们发送注册请求时，如果传入的数据不符合 DTO 中的验证规则，将会抛出 <code class="notranslate">BadRequestException</code> 并返回验证失败的消息。</p>
 <h2>结论</h2>
 <p>通过以上步骤，我们成功地在 Nest.js 应用中添加并使用了自定义验证管道，实现了数据验证和转换的功能。希望这篇博客能帮助你更好地理解和使用 Nest.js 中的管道功能。</p>

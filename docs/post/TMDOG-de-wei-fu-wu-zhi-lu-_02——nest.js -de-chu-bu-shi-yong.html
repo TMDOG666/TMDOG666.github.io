@@ -21,7 +21,7 @@
 <meta property="og:url" content="https://TMDOG666.github.io/post/TMDOG-de-wei-fu-wu-zhi-lu-_02%E2%80%94%E2%80%94nest.js%20-de-chu-bu-shi-yong.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
 <title>TMDOG的微服务之路_02——nest.js 的初步使用</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -98,125 +98,128 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 └── main.ts
 </code></pre>
 <h3>2. 入口文件 (<code class="notranslate">main.ts</code>)</h3>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 
-<span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-v">NestFactory</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-v">AppModule</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-k">await</span> <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">listen</span><span class="pl-kos">(</span><span class="pl-c1">3000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-<span class="pl-kos">}</span>
-<span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+</code></pre>
 <p><code class="notranslate">main.ts</code> 文件是应用程序的入口。我们使用 <code class="notranslate">NestFactory.create</code> 方法来创建一个 Nest 应用实例，并让它监听 3000 端口。</p>
 <h3>3. 服务 (<code class="notranslate">app.service.ts</code>)</h3>
 <p>接下来，我们在之前的代码基础上对User数组对象的操作 <code class="notranslate">UsersService</code>。</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Injectable</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { Injectable } from '@nestjs/common';
 
-@<span class="pl-v">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppService</span> <span class="pl-kos">{</span>
-  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
-    <span class="pl-k">return</span> <span class="pl-s">'Hello World!'</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
-<span class="pl-kos">}</span>
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
 
-<span class="pl-k">type</span> <span class="pl-smi">User</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>       <span class="pl-c">//定义一个简单的用户模板</span>
-  <span class="pl-c1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">;</span>
-  <span class="pl-c1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">;</span>
-<span class="pl-kos">}</span>
+type User = {       //定义一个简单的用户模板
+  username: string;
+  password: string;
+}
 
-@<span class="pl-v">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">UsersService</span> <span class="pl-kos">{</span>
-  <span class="pl-k">private</span> <span class="pl-c1">users</span>: <span class="pl-smi">User</span><span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span> <span class="pl-c">// 实例化用户数组对象</span>
+@Injectable()
+export class UsersService {
+  private users: User[]; // 实例化用户数组对象
 
-  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span> <span class="pl-c">// 初始化 users 数组</span>
-  <span class="pl-kos">}</span>
+  constructor() {
+    this.users = []; // 初始化 users 数组
+  }
 
-<span class="pl-c">// 接下开就是对数组的CRUD了，这里不多赘述</span>
-  <span class="pl-k">public</span> <span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
-    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'User already exists'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+// 接下开就是对数组的CRUD了，这里不多赘述
+  public register(username: string, password: string): boolean {
+    if (this.users.find(user =&gt; user.username === username)) throw new Error('User already exists');
+    this.users.push({ username, password });
+    return true;
+  }
 
-  <span class="pl-k">public</span> <span class="pl-en">login</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'User not found'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">password</span> <span class="pl-c1">!==</span> <span class="pl-s1">password</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'Password is incorrect'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  public login(username: string, password: string): boolean {
+    const user = this.users.find(user =&gt; user.username === username);
+    if (!user) throw new Error('User not found');
+    if (user.password !== password) throw new Error('Password is incorrect');
+    return true;
+  }
 
-  <span class="pl-k">public</span> <span class="pl-en">deleteUser</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'User not found'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">filter</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">!==</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  public deleteUser(username: string): boolean {
+    const user = this.users.find(user =&gt; user.username === username);
+    if (!user) throw new Error('User not found');
+    this.users = this.users.filter(user =&gt; user.username !== username);
+    return true;
+  }
 
-  <span class="pl-k">public</span> <span class="pl-en">changePassword</span><span class="pl-kos">(</span><span class="pl-s1">username</span>: <span class="pl-smi">string</span><span class="pl-kos">,</span> <span class="pl-s1">password</span>: <span class="pl-smi">string</span><span class="pl-kos">)</span>: <span class="pl-smi">boolean</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-s1">user</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">.</span><span class="pl-en">find</span><span class="pl-kos">(</span><span class="pl-s1">user</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">username</span> <span class="pl-c1">===</span> <span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">user</span><span class="pl-kos">)</span> <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'User not found'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-s1">user</span><span class="pl-kos">.</span><span class="pl-c1">password</span> <span class="pl-c1">=</span> <span class="pl-s1">password</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  public changePassword(username: string, password: string): boolean {
+    const user = this.users.find(user =&gt; user.username === username);
+    if (!user) throw new Error('User not found');
+    user.password = password;
+    return true;
+  }
 
-  <span class="pl-k">public</span> <span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">User</span><span class="pl-kos">[</span><span class="pl-kos">]</span> <span class="pl-kos">{</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">users</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
-<span class="pl-kos">}</span></pre></div>
+  public getAllUsers(): User[] {
+    return this.users;
+  }
+}
+</code></pre>
 <ul>
 <li><code class="notranslate">UsersService</code> 则负责用户的注册、登录、更改密码、删除用户和获取所有用户。</li>
 <li><code class="notranslate">@Injectable()</code> 装饰器标识了一个可依赖注入的类，这样一来，Nest 的 IoC 容器就能够识别这个类，并将其注入到其他被注册的类或模块中。</li>
 </ul>
 <h3>4. 控制器 (<code class="notranslate">app.controller.ts</code>)</h3>
 <p>接下来来到我们的重点，我们在之前的基础上编写了，实现了对用户的请求处理 <code class="notranslate">UsersController</code>。</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Controller</span><span class="pl-kos">,</span> <span class="pl-v">Get</span><span class="pl-kos">,</span> <span class="pl-v">Post</span><span class="pl-kos">,</span> <span class="pl-v">Res</span><span class="pl-kos">,</span> <span class="pl-v">Req</span><span class="pl-kos">,</span> <span class="pl-v">Put</span><span class="pl-kos">,</span> <span class="pl-v">Delete</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppService</span><span class="pl-kos">,</span> <span class="pl-v">UsersService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Request</span><span class="pl-kos">,</span> <span class="pl-v">Response</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'express'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { Controller, Get, Post, Res, Req, Put, Delete } from '@nestjs/common';
+import { AppService, UsersService } from './app.service';
+import { Request, Response } from 'express';
 
-@<span class="pl-v">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
-  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">appService</span>: <span class="pl-smi">AppService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-kos">}</span>
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) { }
 
-  @<span class="pl-v">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">appService</span><span class="pl-kos">.</span><span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
-<span class="pl-kos">}</span>
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
 
-@<span class="pl-v">Controller</span><span class="pl-kos">(</span><span class="pl-s">'users'</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">UsersController</span> <span class="pl-kos">{</span>
-  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">userService</span>: <span class="pl-smi">UsersService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-kos">}</span>
+@Controller('users')
+export class UsersController {
+  constructor(private readonly userService: UsersService) { }
 
-  @<span class="pl-v">Post</span><span class="pl-kos">(</span><span class="pl-s">'register'</span><span class="pl-kos">)</span>
-  <span class="pl-en">register</span><span class="pl-kos">(</span>@<span class="pl-v">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  @Post('register')
+  register(@Req() req: Request) {
+    const { username, password } = req.body;
+    return this.userService.register(username, password);
+  }
 
-  @<span class="pl-v">Post</span><span class="pl-kos">(</span><span class="pl-s">'login'</span><span class="pl-kos">)</span>
-  <span class="pl-en">login</span><span class="pl-kos">(</span>@<span class="pl-v">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-kos">{</span> username<span class="pl-kos">,</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">login</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  @Post('login')
+  login(@Req() req: Request) {
+    const { username, password } = req.body;
+    return this.userService.login(username, password);
+  }
 
-  @<span class="pl-v">Put</span><span class="pl-kos">(</span><span class="pl-s">':username'</span><span class="pl-kos">)</span>
-  <span class="pl-en">changePassword</span><span class="pl-kos">(</span>@<span class="pl-v">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-kos">{</span> password <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
-    <span class="pl-k">const</span> <span class="pl-kos">{</span> username <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">params</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">changePassword</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">,</span> <span class="pl-s1">password</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  @Put(':username')
+  changePassword(@Req() req: Request) {
+    const { password } = req.body;
+    const { username } = req.params;
+    return this.userService.changePassword(username, password);
+  }
 
-  @<span class="pl-v">Delete</span><span class="pl-kos">(</span><span class="pl-s">':username'</span><span class="pl-kos">)</span>
-  <span class="pl-en">deleteUser</span><span class="pl-kos">(</span>@<span class="pl-v">Req</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-s1">req</span>: <span class="pl-smi">Request</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-    <span class="pl-k">const</span> <span class="pl-kos">{</span> username <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">req</span><span class="pl-kos">.</span><span class="pl-c1">params</span><span class="pl-kos">;</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">deleteUser</span><span class="pl-kos">(</span><span class="pl-s1">username</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
+  @Delete(':username')
+  deleteUser(@Req() req: Request) {
+    const { username } = req.params;
+    return this.userService.deleteUser(username);
+  }
 
-  @<span class="pl-v">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-  <span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">userService</span><span class="pl-kos">.</span><span class="pl-en">getAllUsers</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
-<span class="pl-kos">}</span></pre></div>
+  @Get()
+  getAllUsers() {
+    return this.userService.getAllUsers();
+  }
+}
+</code></pre>
 <ul>
 <li><code class="notranslate">UsersController</code> 则定义了多个方法来处理用户的注册、登录、更改密码和删除用户等操作。</li>
 <li><code class="notranslate">@Controller()</code> 装饰器定义了一个控制器类，它同样受到 IoC 容器的管理。我们可以把它理解为一个特殊的 <code class="notranslate">@Injectable()</code>，可以处理 HTTP 请求。例如，<code class="notranslate">@Controller('users')</code> 会截取到 <code class="notranslate">"/users"</code> 路径的请求。</li>
@@ -227,16 +230,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <h3>5. 模块 (<code class="notranslate">app.module.ts</code>)</h3>
 <p>最后，我们定义根模块 <code class="notranslate">AppModule</code>。</p>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Module</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppController</span><span class="pl-kos">,</span> <span class="pl-v">UsersController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppService</span><span class="pl-kos">,</span> <span class="pl-v">UsersService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { Module } from '@nestjs/common';
+import { AppController, UsersController } from './app.controller';
+import { AppService, UsersService } from './app.service';
 
-@<span class="pl-v">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
-  <span class="pl-c1">imports</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-v">AppController</span><span class="pl-kos">,</span> <span class="pl-v">UsersController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-v">AppService</span><span class="pl-kos">,</span> <span class="pl-v">UsersService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-<span class="pl-kos">}</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">{</span><span class="pl-kos">}</span></pre></div>
+@Module({
+  imports: [],
+  controllers: [AppController, UsersController],
+  providers: [AppService, UsersService],
+})
+export class AppModule {}
+</code></pre>
 <p><code class="notranslate">AppModule</code> 将所有的控制器和服务注册到 Nest.js 应用程序中。<br>
 在这里我们就可以统一管理需要注册的模块。</p>
 <h3>6. 成果展示</h3>
@@ -246,42 +250,49 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>请求类型</strong>：POST</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/register</code></p>
 <p><strong>请求体</strong>（JSON 格式）：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate">{
-  <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog<span class="pl-pds">"</span></span>,
-  <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
-}</pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">{
+  "username": "tmdog",
+  "password": "114514"
+}
+</code></pre>
 <p><strong>预期响应</strong>：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">true
+</code></pre>
 <p><strong>实际响应</strong>：</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465"><img src="https://github.com/user-attachments/assets/87c160d3-de9f-4d43-a672-805947c6c465" alt="image" style="max-width: 100%;"></a></p>
 <h4>2. 测试用户登录 (<code class="notranslate">/users/login</code>)</h4>
 <p><strong>请求类型</strong>：POST</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/login</code></p>
 <p><strong>请求体</strong>（JSON 格式）：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate">{
-  <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog<span class="pl-pds">"</span></span>,
-  <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
-}</pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">{
+  "username": "tmdog",
+  "password": "114514"
+}
+</code></pre>
 <p><strong>预期响应</strong>：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">true
+</code></pre>
 <p><strong>实际响应</strong>：</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab"><img src="https://github.com/user-attachments/assets/b7bcb93d-dddb-479b-84da-f2d34be914ab" alt="image" style="max-width: 100%;"></a></p>
 <h4>3. 测试修改密码 (<code class="notranslate">/users/:username</code>)</h4>
 <p><strong>请求类型</strong>：PUT</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/tmdog</code></p>
 <p><strong>请求体</strong>（JSON 格式）：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate">{
-    <span class="pl-ent">"password"</span>:<span class="pl-s"><span class="pl-pds">"</span>114515<span class="pl-pds">"</span></span>
-}</pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">{
+    "password":"114515"
+}
+</code></pre>
 <p><strong>预期响应</strong>：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">true
+</code></pre>
 <p><strong>实际响应</strong>：</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a"><img src="https://github.com/user-attachments/assets/ba29494f-f33e-48b9-b77e-2a41dd01558a" alt="image" style="max-width: 100%;"></a></p>
 <h4>4. 测试删除用户 (<code class="notranslate">/users/:username</code>)</h4>
 <p><strong>请求类型</strong>：DELETE</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users/tmdog</code></p>
 <p><strong>预期响应</strong>：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-c1">true</span></pre></div>
+<pre lang="json" class="notranslate"><code class="notranslate">true
+</code></pre>
 <p><strong>实际响应</strong>：</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886"><img src="https://github.com/user-attachments/assets/0e211f7a-c737-46b3-bbbb-3421ae05b886" alt="image" style="max-width: 100%;"></a></p>
 <h4>5. 测试获取所有用户 (<code class="notranslate">/users</code>)</h4>
@@ -289,20 +300,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>请求类型</strong>：GET</p>
 <p><strong>URL</strong>：<code class="notranslate">http://localhost:3000/users</code></p>
 <p><strong>预期响应</strong>：</p>
-<div class="highlight highlight-source-json"><pre class="notranslate">[
+<pre lang="json" class="notranslate"><code class="notranslate">[
     {
-        <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog<span class="pl-pds">"</span></span>,
-        <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+        "username": "tmdog",
+        "password": "114514"
     },
     {
-        <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog666<span class="pl-pds">"</span></span>,
-        <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+        "username": "tmdog666",
+        "password": "114514"
     },
     {
-        <span class="pl-ent">"username"</span>: <span class="pl-s"><span class="pl-pds">"</span>tmdog233<span class="pl-pds">"</span></span>,
-        <span class="pl-ent">"password"</span>: <span class="pl-s"><span class="pl-pds">"</span>114514<span class="pl-pds">"</span></span>
+        "username": "tmdog233",
+        "password": "114514"
     }
-]</pre></div>
+]
+</code></pre>
 <p><strong>实际响应</strong>：<br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0"><img src="https://github.com/user-attachments/assets/a2fd2587-7c06-4dc7-9173-1e26e20e14f0" alt="image" style="max-width: 100%;"></a></p>
 <p>我们就完成了接口的初步测试，这是一个简单的示例，我们并没有给出一个标准统一的响应，所以结果略为简陋</p>

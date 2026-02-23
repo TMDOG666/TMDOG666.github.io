@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://TMDOG666.github.io/post/TMDOG-de-wei-fu-wu-zhi-lu-_01%E2%80%94%E2%80%94nest.js%20-kuai-su-ru-men.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/174948015?v=4">
 <title>TMDOG的微服务之路_01——nest.js 快速入门</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -114,11 +114,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/17c04643-2beb-48c6-bfe3-7ec560bedafd"><img src="https://github.com/user-attachments/assets/17c04643-2beb-48c6-bfe3-7ec560bedafd" alt="image-20240726165253023" style="max-width: 100%;"></a></p>
 <h3>2. 安装 Nest.js CLI</h3>
 <p>首先，我们需要安装 Nest.js CLI 来创建和管理 Nest.js 项目。运行以下命令来安装 CLI：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">npm i -g @nestjs/cli</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">npm i -g @nestjs/cli
+</code></pre>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c4975f53-d249-4b52-9266-e995c7a34b7b"><img src="https://github.com/user-attachments/assets/c4975f53-d249-4b52-9266-e995c7a34b7b" alt="image-20240726164959578" style="max-width: 100%;"></a></p>
 <h3>3. 创建一个新项目</h3>
 <p>使用 CLI 创建一个新的 Nest.js 项目：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">nest new project-name</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">nest new project-name
+</code></pre>
 <p>系统会提示你选择包管理器，可以选择 <code class="notranslate">npm</code> 或 <code class="notranslate">yarn</code>。选择后，CLI 会自动安装项目所需的依赖。</p>
 <p>我选择的是<code class="notranslate">npm</code></p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e46c7319-ced2-40a8-9b70-b8a6cb2b44b2"><img src="https://github.com/user-attachments/assets/e46c7319-ced2-40a8-9b70-b8a6cb2b44b2" alt="image-20240726165535673" style="max-width: 100%;"></a></p>
@@ -162,14 +164,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>main.ts</strong>: 应用入口文件。</li>
 </ul>
 <h3><code class="notranslate">main.ts</code></h3>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">NestFactory</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/core'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppModule</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.module'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 
-<span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
-  <span class="pl-k">const</span> <span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-v">NestFactory</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-v">AppModule</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-k">await</span> <span class="pl-s1">app</span><span class="pl-kos">.</span><span class="pl-en">listen</span><span class="pl-kos">(</span><span class="pl-c1">3000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-<span class="pl-kos">}</span>
-<span class="pl-en">bootstrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+</code></pre>
 <p><code class="notranslate">main.ts</code>是应用程序的入口文件。</p>
 <ol>
 <li>
@@ -192,16 +195,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </li>
 </ol>
 <h3><code class="notranslate">app.module.ts</code></h3>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Module</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppController</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.controller'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
-@<span class="pl-v">Module</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
-  <span class="pl-c1">imports</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-  <span class="pl-c1">controllers</span>: <span class="pl-kos">[</span><span class="pl-v">AppController</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-  <span class="pl-c1">providers</span>: <span class="pl-kos">[</span><span class="pl-v">AppService</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
-<span class="pl-kos">}</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppModule</span> <span class="pl-kos">{</span><span class="pl-kos">}</span></pre></div>
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+</code></pre>
 <p><code class="notranslate">app.module.ts</code>定义了应用程序的根模块（AppModule）。</p>
 <ol>
 <li><code class="notranslate">import { Module } from '@nestjs/common';</code>：导入Module装饰器。</li>
@@ -214,18 +218,19 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">export class AppModule {}</code>：定义并导出AppModule类。</li>
 </ol>
 <h3><code class="notranslate">app.controller.ts</code></h3>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Controller</span><span class="pl-kos">,</span> <span class="pl-v">Get</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
-<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">AppService</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'./app.service'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
 
-@<span class="pl-v">Controller</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppController</span> <span class="pl-kos">{</span>
-  <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-k">private</span> <span class="pl-k">readonly</span> <span class="pl-s1">appService</span>: <span class="pl-smi">AppService</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
 
-  @<span class="pl-v">Get</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
-    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">appService</span><span class="pl-kos">.</span><span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
-<span class="pl-kos">}</span></pre></div>
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+</code></pre>
 <p><code class="notranslate">app.controller.ts</code>定义了一个控制器（AppController）。</p>
 <ol>
 <li>
@@ -251,14 +256,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </li>
 </ol>
 <h3><code class="notranslate">app.service.ts</code></h3>
-<div class="highlight highlight-source-ts"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-v">Injectable</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@nestjs/common'</span><span class="pl-kos">;</span>
+<pre lang="typescript" class="notranslate"><code class="notranslate">import { Injectable } from '@nestjs/common';
 
-@<span class="pl-v">Injectable</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
-<span class="pl-k">export</span> <span class="pl-k">class</span> <span class="pl-smi">AppService</span> <span class="pl-kos">{</span>
-  <span class="pl-en">getHello</span><span class="pl-kos">(</span><span class="pl-kos">)</span>: <span class="pl-smi">string</span> <span class="pl-kos">{</span>
-    <span class="pl-k">return</span> <span class="pl-s">'Hello World!'</span><span class="pl-kos">;</span>
-  <span class="pl-kos">}</span>
-<span class="pl-kos">}</span></pre></div>
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+</code></pre>
 <p><code class="notranslate">app.service.ts</code>定义了一个服务（AppService）。</p>
 <ol>
 <li><code class="notranslate">import { Injectable } from '@nestjs/common';</code>：导入Injectable装饰器。</li>
